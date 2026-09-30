@@ -1,0 +1,21 @@
+# Première publication : liste fermée. Rien d’autre ne part dans ce dépôt.
+*
+!/.gitignore
+!/.node-version
+!/README.md
+!/package.json
+!/package-lock.json
+!/src/
+!/src/index.html
+!/src/styles.css
+!/src/assets/
+!/src/assets/logo-accueil.webp
+!/src/assets/favicon.png
+!/scripts/
+!/scripts/build.mjs
+!/tests/
+!/tests/site.test.mjs
+!/.github/
+!/.github/workflows/
+!/.github/workflows/ci.yml
+!/.github/workflows/pages.yml

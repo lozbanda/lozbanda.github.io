@@ -1,0 +1,12 @@
+{
+  "name": "lozbanda-coming-soon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Page d’attente de Loz’Banda, sans dépendance ni script visiteur.",
+  "engines": { "node": ">=24 <27" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  }
+}
