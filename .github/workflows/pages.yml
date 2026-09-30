@@ -1,8 +1,18 @@
-name: Publier la page d’attente
+name: Publier le site ou la maintenance
+run-name: Publier « ${{ inputs.mode }} » depuis ${{ github.ref_name }}
 
-# Une modification ou une PR ne publie jamais automatiquement.
+# Un push, y compris de Markdown, ne publie jamais automatiquement.
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'site = site complet ; maintenance = page d’attente'
+        type: choice
+        required: true
+        default: site
+        options:
+          - site
+          - maintenance
 
 permissions:
   contents: read
@@ -25,15 +35,31 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
-      - name: Vérifier le verrou npm sans scripts d’installation
+      - name: Refuser tout mode inconnu
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          case "$MODE" in site|maintenance) ;; *) echo 'Mode inconnu' >&2; exit 1 ;; esac
+      - name: Installer les dépendances verrouillées du site
+        if: inputs.mode == 'site'
         run: npm ci --ignore-scripts
-      - name: Générer et tester la page
+      - name: Générer et tester le site complet
+        if: inputs.mode == 'site'
         run: npm test
-      - name: Préparer uniquement la page compilée
+      - name: Bloquer les exemples fictifs avant publication
+        if: inputs.mode == 'site'
+        run: npm run check:publication
+      - name: Vérifier la maintenance indépendamment du contenu et de npm
+        if: inputs.mode == 'maintenance'
+        run: node --test tests/maintenance.test.mjs
+      - name: Générer uniquement la maintenance
+        if: inputs.mode == 'maintenance'
+        run: node scripts/build-maintenance.mjs
+      - name: Préparer uniquement les fichiers compilés
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
-          include-hidden-files: true # Seulement .nojekyll, créé par le build.
+          include-hidden-files: true # .nojekyll seulement dans cette sortie contrôlée.
 
   deploy:
     needs: build

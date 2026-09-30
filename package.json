@@ -1,12 +1,25 @@
 {
-  "name": "lozbanda-coming-soon",
-  "version": "1.0.0",
+  "name": "lozbanda-site",
   "private": true,
   "type": "module",
-  "description": "Page d’attente de Loz’Banda, sans dépendance ni script visiteur.",
-  "engines": { "node": ">=24 <27" },
+  "engines": {
+    "node": ">=24 <27"
+  },
   "scripts": {
+    "dev": "node scripts/dev.mjs",
     "build": "node scripts/build.mjs",
-    "test": "npm run build && node --test tests/*.test.mjs"
+    "check:content": "node scripts/check-content.mjs",
+    "check:publication": "node scripts/check-content.mjs --publication",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "build:maintenance": "node scripts/build-maintenance.mjs",
+    "test:maintenance": "node --test tests/maintenance.test.mjs",
+    "test:lan": "python3 tests/lan.test.py"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.6",
+    "@11ty/eleventy-dev-server": "2.0.8",
+    "image-size": "2.0.4",
+    "lozbanda-local-server": "file:build/dev-server",
+    "markdown-it": "15.0.2"
   }
 }

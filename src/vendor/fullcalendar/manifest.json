@@ -1,0 +1,34 @@
+[
+  {
+    "file": "index.global.min.js",
+    "package": "fullcalendar",
+    "version": "6.1.21",
+    "source": "https://registry.npmjs.org/fullcalendar/-/fullcalendar-6.1.21.tgz",
+    "integrity": "sha512-yGZhflQmfCJKmmOlwJcQ0MPNAYABieaiJp9AaRgHBMRIUxNA+VFa6mkIbVNpjdSZIy9AY2HwteTt58tJ+3ktuQ==",
+    "sha256": "4e72ff169af857bbb8fee626364949d570424b00df36c01bd087a9580371515e"
+  },
+  {
+    "file": "LICENSE.md",
+    "package": "fullcalendar",
+    "version": "6.1.21",
+    "source": "https://registry.npmjs.org/fullcalendar/-/fullcalendar-6.1.21.tgz",
+    "integrity": "sha512-yGZhflQmfCJKmmOlwJcQ0MPNAYABieaiJp9AaRgHBMRIUxNA+VFa6mkIbVNpjdSZIy9AY2HwteTt58tJ+3ktuQ==",
+    "sha256": "4c0b0dae26c99e3b11be70b990a703be4deb75e21884104582e0e217786d3209"
+  },
+  {
+    "file": "fr.global.min.js",
+    "package": "@fullcalendar/core",
+    "version": "6.1.21",
+    "source": "https://registry.npmjs.org/@fullcalendar/core/-/core-6.1.21.tgz",
+    "integrity": "sha512-t3u/+sqh3Iq7TWtUnVLcGDUE6OWZh0UD3c04bI/l7lSLAgAKr3kngBmhHiQD1QXpwC8ZN5iNqG7a7gOVixhSKQ==",
+    "sha256": "f2170eeb632d5b0d95b3f3a22537a7857d5227c04cc0b8ff9bbe515953208428"
+  },
+  {
+    "file": "LICENSE-preact.txt",
+    "package": "preact",
+    "version": "10.12.1",
+    "source": "https://registry.npmjs.org/preact/-/preact-10.12.1.tgz",
+    "integrity": "sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==",
+    "sha256": "1fe6958409c8c257a70c587a18b6f7f412b179b456630790d30b2ec9a8e4b7d4"
+  }
+]

@@ -1,62 +1,39 @@
-// Page d’attente seulement : liste fermée, aucune copie du site complet.
-import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+// Production : génération isolée, puis remplacement de site/ uniquement si
+// tout a réussi. Un Markdown invalide conserve le dernier aperçu fonctionnel.
+import { mkdtemp, rename, rm, stat } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
-export const FILES = ['index.html', 'styles.css', 'assets/logo-accueil.webp', 'assets/favicon.png'];
-const ROOT = fileURLToPath(new URL('../', import.meta.url));
-
-function source(root, file) {
-  let path = root;
-  const parts = ['src', ...file.split('/')];
-  for (const [i, part] of parts.entries()) {
-    path = join(path, part);
-    const info = lstatSync(path);
-    if (info.isSymbolicLink() || (i === parts.length - 1 ? !info.isFile() : !info.isDirectory())) {
-      throw new Error(`Source réelle attendue, sans lien symbolique : src/${file}`);
-    }
+const root = fileURLToPath(new URL('../', import.meta.url));
+const output = join(root, 'site');
+const temporary = await mkdtemp(join(root, '.build-'));
+const next = join(temporary, 'next');
+const previous = join(temporary, 'previous');
+let cleanTemporary = true;
+try {
+  const result = spawnSync(process.execPath, [resolve(root, 'node_modules/@11ty/eleventy/cmd.cjs'),
+    `--output=${next}`], { cwd: root, stdio: 'inherit' });
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error('Génération refusée : site/ est conservé. Corrigez le contenu signalé ci-dessus.');
+  for (const file of ['index.html', 'agenda.html', 'galerie.html', 'musiciens.html', 'infos-pratiques.html', 'evenements.json', 'sorties.json', '.nojekyll']) {
+    if (!(await stat(join(next, file))).isFile()) throw new Error(`Sortie manquante : ${file}`);
   }
-  return path;
-}
-
-export function build(directory = ROOT) {
-  const root = realpathSync(directory);
-  const output = join(root, 'site');
-  // lstat détecte aussi un lien symbolique cassé.
-  try {
-    const info = lstatSync(output);
-    if (!info.isDirectory() || info.isSymbolicLink()) throw new Error('site/ doit être un dossier réel.');
-  } catch (error) { if (error.code !== 'ENOENT') throw error; }
-  const temporary = mkdtempSync(join(root, '.build-'));
-  const next = join(temporary, 'next'), previous = join(temporary, 'previous');
-  let keepRecovery = false;
-  try {
-    mkdirSync(next);
-    for (const file of FILES) {
-      const input = source(root, file);
-      const target = join(next, file);
-      mkdirSync(dirname(target), { recursive: true });
-      copyFileSync(input, target);
-    }
-    writeFileSync(join(next, '.nojekyll'), '');
-    if (existsSync(output)) renameSync(output, previous);
-    try { renameSync(next, output); }
-    catch (error) {
-      if (existsSync(previous)) {
-        try { renameSync(previous, output); }
-        catch (restoreError) {
-          keepRecovery = true;
-          throw new Error(`Ancienne sortie conservée dans ${previous} : ${restoreError.message}`, { cause: error });
-        }
+  let hadPrevious = false;
+  try { await rename(output, previous); hadPrevious = true; } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  try { await rename(next, output); } catch (error) {
+    if (hadPrevious) {
+      try { await rename(previous, output); } catch (restoreError) {
+        cleanTemporary = false;
+        throw new Error(`Restauration impossible : ancien site conservé dans ${previous}. ${restoreError.message}`);
       }
-      throw error;
     }
-  } finally {
-    if (!keepRecovery) rmSync(temporary, { recursive: true, force: true });
+    throw error;
   }
-}
-
-if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
-  try { build(); console.log('Page d’attente générée dans site/ ; aucune publication effectuée.'); }
-  catch (error) { console.error(error.message); process.exitCode = 1; }
+  console.log('Site généré dans site/ ; aucun déploiement effectué.');
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (cleanTemporary) await rm(temporary, { recursive: true, force: true });
 }

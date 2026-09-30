@@ -1,0 +1,91 @@
+# Modifier le site en Markdown
+
+Les sources sont dans [`contenu/`](../contenu/), accessibles avec le crayon GitHub.
+Un fichier enregistré déclenche **Vérifier et régénérer le site**. La génération se
+fait sur GitHub, pas sur l’ordinateur qui a effectué l’édition.
+
+| Fichier | Ce qu’il pilote |
+|---|---|
+| [`agenda.md`](../contenu/agenda.md) | Dates, archives, cartes et calendrier |
+| [`galerie.md`](../contenu/galerie.md) | Ordre, légendes, alternatives et photos |
+| [`musiciens.md`](../contenu/musiciens.md) | Noms, instruments, récits et portraits facultatifs |
+| [`infos-pratiques.md`](../contenu/infos-pratiques.md) | Cartes et liens de contact |
+| [`musique.md`](../contenu/musique.md) | Morceaux locaux, ordre et crédits |
+
+Le titre `#` et le préambule sont des consignes non affichées. Chaque bloc `##`
+crée une entrée. Les champs précèdent la description, dans une liste `- Champ : valeur`.
+Les erreurs mentionnent le fichier, la ligne et l’entrée ; ne pas modifier les tests
+pour faire accepter une date ou un fichier invalide.
+
+## Agenda
+
+Champs : `Identifiant`, `Date` (AAAA-MM-JJ), `Dernier jour` pour une période inclusive,
+`Début` et `Fin` (HH:MM), `Lieu`, `Source` (lien Markdown HTTPS), `Exemple`.
+Seule la date est obligatoire. Conserver les identifiants au réordonnancement.
+Ne pas inventer d’horaires et ne pas confondre date de publication et date d’événement.
+
+`Exemple : oui` signale un brouillon fictif : le workflow de publication le refuse.
+Remplacer tout le bloc par une annonce confirmée, ou retirer le bloc ; ne pas
+seulement effacer le marqueur pour rendre un faux rendez-vous publiable.
+
+## Galerie et portraits
+
+Les photos de la maquette locale ne sont pas encore validées pour le public et
+n’ont pas été importées. Une galerie vide est normale : un message l’indique.
+
+Après confirmation des droits du photographe et du droit à l’image :
+
+1. Optimiser l’image, retirer ses métadonnées privées et rester sous 1 Mo.
+2. Ajouter uniquement ce média à `src/assets/` (portrait : `src/assets/musiciens/`).
+3. Autoriser explicitement son chemin dans `.gitignore` ; contrôler le diff.
+4. Ajouter le bloc Markdown avec un titre `##` et `- Image : assets/nom.webp`.
+   `Alternative` décrit sobrement l’image ; `Source` conserve la provenance dans
+   les sources. `Miniature` et `Variantes` sont facultatifs. Les largeurs du `srcset`
+   doivent être les dimensions réelles des fichiers.
+5. Vérifier la CI avant de lancer une publication volontaire.
+
+Un musicien utilise un titre `##` pour son nom validé, `- Instrument : …`, puis
+un paragraphe expliquant son choix. Portrait facultatif : `- Photo : assets/musiciens/prenom.webp`,
+et éventuellement `- Alternative : Portrait de Prénom`. Sans photo, un emplacement
+neutre s’affiche ; sans fiche, la page annonce les portraits à venir.
+Ne jamais publier une identité fictive comme si elle appartenait au groupe.
+
+## Informations pratiques
+
+Un `##` par carte. Le texte accepte paragraphes, emphase, listes et liens sûrs.
+Un bouton facultatif se place immédiatement sous le titre :
+
+```markdown
+- Bouton : [Contacter la banda](mailto:lozbanda48@hotmail.com)
+```
+
+Ne pas inventer le financement, les horaires de répétition ou les responsables.
+
+## Musique
+
+Un `##` par morceau, dans l’ordre voulu. `Fichier` est obligatoire et désigne un
+MP3/WAV directement dans `assets/audio/`. `Crédit`, `Source`, `Licence` et `Empreinte`
+sont facultatifs selon les preuves disponibles ; ne pas inventer de licence.
+La source vidéo est une provenance, jamais une URL de lecture distante.
+Les fichiers non déclarés ne sont pas copiés dans l’artefact.
+
+Conserver les crédits et empreintes des deux enregistrements déjà autorisés.
+Une nouvelle piste exige sa propre autorisation ; l’accord existant ne la couvre pas.
+La musique démarre au clic, sans avance automatique, et continue entre les pages
+internes. Une recharge complète, une fermeture ou le départ du site l’arrête.
+
+## Vérifier puis mettre en ligne
+
+- Attendre la CI verte. L’artefact `site-verifie` contient le site régénéré,
+  disponible un jour. Les tests vérifient notamment que des changements Markdown
+  seuls se retrouvent dans le HTML et le JSON, et qu’un échec conserve la sortie précédente.
+- Fusionner sur `main` après relecture ; vérifier la CI de cette révision.
+- **Actions → Publier le site ou la maintenance → Run workflow → main → site**.
+- Si le mode maintenance est actif, le push et la CI le laissent actif.
+- Sans publication réussie, le site en ligne ne change pas.
+
+Un fichier de sortie n’est jamais la source de vérité : ne pas éditer `site/`.
+Les nouveaux médias et leur Markdown doivent être ajoutés dans le même commit ou
+la même PR pour éviter une référence à un fichier encore absent.
+
+[Accueil du dépôt](../README.md) · [Maintenance](MAINTENANCE.md)

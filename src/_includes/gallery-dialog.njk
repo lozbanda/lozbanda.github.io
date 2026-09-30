@@ -1,0 +1,22 @@
+  <dialog class="gallery-dialog" id="gallery-dialog" aria-labelledby="gallery-title">
+    <div class="gallery-toolbar">
+      <p class="gallery-counter" id="gallery-counter" aria-hidden="true"></p>
+      <div class="gallery-controls">
+        <button class="gallery-control" id="gallery-prev" type="button" aria-label="Photo précédente"><span aria-hidden="true">←</span></button>
+        <button class="gallery-control" id="gallery-next" type="button" aria-label="Photo suivante"><span aria-hidden="true">→</span></button>
+        <button class="gallery-control" id="gallery-close" type="button" aria-label="Fermer la galerie" autofocus><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+    <figure>
+      <div class="gallery-stage" id="gallery-stage">
+        <div class="gallery-image-slot" id="gallery-image-slot"></div>
+        <p class="gallery-status" id="gallery-status" role="status"></p>
+      </div>
+      <figcaption class="gallery-caption">
+        <h2 id="gallery-title">La banda, en images</h2>
+        <p id="gallery-description"></p>
+        <a id="gallery-original" hidden>Ouvrir le fichier image</a>
+      </figcaption>
+    </figure>
+    <p class="sr-only" id="gallery-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+  </dialog>

@@ -1,0 +1,36 @@
+---
+layout: base.njk
+permalink: musiciens.html
+pageId: musiciens
+title: Les Musiciens — Loz’Banda
+description: "Les visages de Loz’Banda : découvrez les musiciens du groupe, leurs instruments et ce qui leur a donné envie d’en jouer."
+---
+<main id="contenu" class="container page musicians-page" tabindex="-1">
+  <div class="musicians-intro">
+    <h1>Les Musiciens</h1>
+  </div>
+  <div class="musicians-grid">
+    {% for member in contenus.musicians %}
+    <article class="musician-card" aria-labelledby="{{ member.id }}">
+      <div class="musician-heading">
+        {% if member.image %}
+        <img class="musician-portrait" src="{{ member.image }}" width="{{ member.width }}" height="{{ member.height }}" alt="{{ member.alt }}" loading="lazy" decoding="async">
+        {% else %}
+        <div class="musician-portrait musician-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 64 64" focusable="false"><circle cx="32" cy="22" r="10"/><path d="M13 54v-3a19 19 0 0 1 38 0v3"/></svg>
+          <span>Photo à venir</span>
+        </div>
+        {% endif %}
+        <div>
+          <h2 id="{{ member.id }}">{{ member.nom }}{% if member.exemple %} <span class="musician-fiction">(portrait fictif)</span>{% endif %}</h2>
+          <p class="musician-instrument">{{ member.instrument }}</p>
+        </div>
+      </div>
+      <p class="musician-question">Pourquoi cet instrument ?</p>
+      <p class="musician-story">{{ member.description }}</p>
+    </article>
+    {% else %}
+    <p>Les portraits des musiciens arrivent bientôt.</p>
+    {% endfor %}
+  </div>
+</main>

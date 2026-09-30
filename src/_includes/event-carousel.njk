@@ -1,0 +1,15 @@
+{% macro carousel(id, titleId, title, listId, scope) %}
+<section class="agenda-strip" id="{{ id }}" aria-labelledby="{{ titleId }}" aria-roledescription="carrousel" hidden>
+  <div class="carousel-heading">
+    <h2 id="{{ titleId }}">{{ title }}</h2>
+    <div class="carousel-navigation">
+      <p class="carousel-count" aria-live="polite" aria-atomic="true"></p>
+      <div class="carousel-controls" role="group" aria-label="Parcourir les dates {{ scope }}">
+        <button class="icon-button" type="button" data-carousel-prev aria-label="Dates {{ scope }} précédentes" aria-controls="{{ listId }}" aria-disabled="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+        <button class="icon-button" type="button" data-carousel-next aria-label="Dates {{ scope }} suivantes" aria-controls="{{ listId }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <ul class="event-list" id="{{ listId }}"></ul>
+</section>
+{% endmacro %}

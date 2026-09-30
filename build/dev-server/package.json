@@ -1,0 +1,8 @@
+{
+  "name": "lozbanda-local-server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.cjs",
+  "11ty": { "compatibility": "^3.1.6" },
+  "peerDependencies": { "@11ty/eleventy-dev-server": "2.0.8" }
+}

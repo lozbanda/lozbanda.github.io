@@ -1,5 +1,6 @@
-name: Vérifier la page d’attente
+name: Vérifier et régénérer le site
 
+# CI automatique en lecture seule : l’artefact vérifié n’est pas un déploiement.
 on:
   push:
   pull_request:
@@ -25,7 +26,17 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
-      - name: Vérifier le verrou npm sans scripts d’installation
+          cache: npm
+      - name: Installer les dépendances verrouillées
         run: npm ci --ignore-scripts
-      - name: Générer et tester la page
+      - name: Régénérer les Markdown et vérifier le site et la maintenance
         run: npm test
+      - name: Tester le serveur d’aperçu en isolation
+        run: python3 tests/lan.test.py
+      - name: Conserver le site régénéré, sans le publier
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          name: site-verifie
+          path: site
+          retention-days: 1
+          include-hidden-files: true

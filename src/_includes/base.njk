@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <!-- Généré par Eleventy depuis src/ et contenu/. Ne pas éditer site/. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fcf7ef">
+  <meta name="description" content="{{ description }}">
+  <meta name="robots" content="{{ site.robots }}">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="{{ ogTitle or title }}">
+  <meta property="og:description" content="{{ ogDescription or description }}">
+  <title>{{ title }}</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  {% if pageId == 'agenda' %}
+  <link rel="stylesheet" href="agenda.css">
+  <script src="vendor/fullcalendar/index.global.min.js" defer></script>
+  <script src="vendor/fullcalendar/fr.global.min.js" defer></script>
+  <script type="module" src="agenda.js"></script>
+  <noscript><style>.agenda-layout { display: none; }</style></noscript>
+  {% elif pageId == 'galerie' %}
+  <script type="module" src="gallery.js"></script>
+  {% endif %}
+  {% if musique.tracks.length %}
+  <link rel="stylesheet" href="music-player.css">
+  <script type="module" src="music-player.js"></script>
+  {% endif %}
+  <script type="module" src="navigation.js"></script>
+</head>
+<body data-page="{{ pageId }}">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  {% include "header.njk" %}
+  {{ content | safe }}
+  {% include "music-player.njk" %}
+  {% include "footer.njk" %}
+  <p class="sr-only" id="navigation-status" role="status" aria-live="polite"></p>
+</body>
+</html>

@@ -1,0 +1,66 @@
+---
+layout: base.njk
+permalink: agenda.html
+pageId: agenda
+title: "Agenda | Loz’Banda"
+description: "Retrouvez les prochaines sorties de Loz’Banda, la banda du Chastel-Nouvel, en Lozère."
+ogTitle: "Agenda | Loz’Banda"
+ogDescription: "Les prochains rendez-vous de la banda, pour se retrouver en musique."
+---
+  <main id="contenu" class="container page" tabindex="-1">
+    <h1 class="sr-only">Agenda</h1>
+    <p class="agenda-notice" id="agenda-demo-notice"{% if not contenus.hasDemoEvents %} hidden{% endif %}>Les dates « Exemple fictif » illustrent l’agenda. Ce ne sont pas des prestations annoncées.</p>
+    <noscript>
+      <p class="calendar-fallback">Activez JavaScript pour utiliser le calendrier. Voici toutes les dates publiées, de la plus récente à la plus ancienne.</p>
+      {% if contenus.eventList.length %}
+      <div class="info-grid" aria-label="Dates publiées">
+        {% for event in contenus.eventList %}
+        <section aria-labelledby="static-event-{{ loop.index }}">
+          <h2 id="static-event-{{ loop.index }}">{{ event.titre }}</h2>
+          <p><time datetime="{{ event.date }}">{{ event.label }}</time></p>
+          <p>{{ event.lieu }}</p>
+          {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+          {% if event.source %}<a class="source-link" href="{{ event.source.url }}" target="_blank" rel="noopener noreferrer">{{ event.source.libelle }} ↗</a>{% endif %}
+        </section>
+        {% endfor %}
+      </div>
+      {% else %}<p>Aucune date publiée pour le moment.</p>{% endif %}
+    </noscript>
+    {% from "event-carousel.njk" import carousel %}
+    {{ carousel('agenda-upcoming', 'upcoming-title', 'À venir', 'upcoming-list', 'à venir') }}
+    {{ carousel('agenda-archives', 'archives-title', 'Nos dernières sorties', 'archive-list', 'passées') }}
+    <div class="agenda-layout">
+      <section class="calendar-card" id="calendar-region" tabindex="-1" aria-label="Calendrier des sorties" aria-describedby="event-label event-title event-date">
+        <div class="calendar-tools" id="calendar-tools" hidden>
+          <div class="calendar-period">
+            <p class="section-label">AU FIL DES MOIS</p>
+            <h2 id="calendar-month" aria-live="polite" aria-atomic="true">Calendrier</h2>
+          </div>
+          <div class="calendar-navigation" role="group" aria-label="Changer de mois">
+            <button class="icon-button" id="month-prev" type="button" aria-label="Mois précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+            <button class="calendar-today" id="month-today" type="button">Aujourd’hui</button>
+            <button class="icon-button" id="month-next" type="button" aria-label="Mois suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="calendar-views" role="group" aria-label="Affichage de l’agenda">
+            <button type="button" data-calendar-view="dayGridMonth" aria-pressed="true">Mois</button>
+            <button type="button" data-calendar-view="listMonth" aria-pressed="false">Liste</button>
+          </div>
+        </div>
+        <p class="calendar-fallback" id="calendar-fallback" role="status">Pour connaître nos prochaines sorties, contactez la banda.</p>
+        <noscript><p class="calendar-fallback">Activez JavaScript pour afficher le calendrier interactif.</p></noscript>
+        <div id="calendar" hidden></div>
+        <p class="calendar-legend" id="calendar-legend" hidden><span class="legend-today" aria-hidden="true"></span>Aujourd’hui <span class="legend-selection" aria-hidden="true"></span>Sélection <span class="legend-event" aria-hidden="true"></span>Une sortie en musique</p>
+      </section>
+      <aside class="agenda-aside" aria-label="Détails des sorties">
+        <article class="event-detail" id="event-detail" tabindex="-1" aria-live="polite" aria-atomic="true" aria-labelledby="event-title">
+          <span class="music-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2.5"/><ellipse cx="17" cy="16" rx="3" ry="2.5"/></svg></span>
+          <p class="section-label" id="event-label">PROCHAIN RENDEZ-VOUS</p>
+          <h2 id="event-title">On se retrouve bientôt.</h2>
+          <p class="event-date" id="event-date" hidden></p>
+          <p class="event-location" id="event-location" hidden></p>
+          <p id="event-description">Les prochaines dates seront annoncées ici.</p>
+          <a id="event-source" class="source-link" target="_blank" rel="noopener noreferrer" hidden></a>
+        </article>
+      </aside>
+    </div>
+  </main>

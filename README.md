@@ -1,70 +1,97 @@
-# Loz’Banda — Le site arrive bientôt
+# Loz’Banda — site et mode maintenance
 
-Première version du site : **une page d’attente en français**, le logo authentique
-et le contact de la banda. Aucun calendrier fictif, galerie, audio, traceur ou
-script visiteur. Le site complet est préparé séparément et n’est pas dans ce dépôt.
+**Site : https://lozbanda.github.io/**
 
-Site public : **https://lozbanda.github.io/**.
-Le dépôt `lozbanda.github.io` publie directement à la racine, sans sous-dossier.
+**Dépôt : https://github.com/lozbanda/lozbanda.github.io**
 
-## Modifier la page
+Site statique français, généré par Eleventy à partir de cinq fichiers Markdown.
+Logo authentique, calendrier local, galerie progressive, musiciens, informations
+pratiques et deux morceaux locaux autorisés. Aucun CMS, police distante ou traqueur.
 
-- Texte et contact : `src/index.html`.
-- Couleurs et disposition : `src/styles.css`.
-- Logo et favicon : `src/assets/`.
+## Modifier le contenu directement sur GitHub
 
-Sur GitHub, utiliser le bouton crayon, enregistrer sur une branche ou dans une
-pull request, puis attendre le workflow **Vérifier la page d’attente**.
-La CI vérifie aussi chaque push. Un succès ne publie rien automatiquement.
+1. Ouvrir un fichier dans [`contenu/`](contenu/), puis cliquer sur le crayon.
+2. Modifier et enregistrer le Markdown, de préférence via une branche et une PR.
+3. Attendre **Actions → Vérifier et régénérer le site** : GitHub installe les
+   dépendances verrouillées, régénère le site et exécute les tests.
+4. Le résultat `site-verifie` est téléchargeable dans les artefacts du run pendant
+   un jour (archive contenant `artifact.tar`). **Ce résultat n’est pas mis en ligne.**
+5. Pour publier : **Actions → Publier le site ou la maintenance → Run workflow →
+   branche `main` → mode `site` → Run workflow**.
 
-## Publier volontairement
+[Guide d’édition des cinq Markdown](docs/EDITION.md).
+Ne jamais modifier le dossier généré `site/` : il n’est pas versionné.
 
-1. Dans **Settings → Pages → Build and deployment**, choisir **GitHub Actions**.
-2. Dans **Actions → Publier la page d’attente → Run workflow**, sélectionner `main`.
-3. Attendre les jobs `build` et `deploy`, puis ouvrir l’URL donnée par le déploiement.
+## Activer / désactiver la maintenance
 
-Le workflow manuel refait les tests avant de publier **seulement `site/`**.
-Il utilise le jeton natif GitHub Actions : aucun mot de passe ou jeton personnel
-à ajouter aux fichiers ou aux secrets du dépôt. Les actions officielles sont
-épinglées par SHA, vérifiées le 30 septembre 2026.
+Dans le même workflow **Publier le site ou la maintenance**, choisir :
 
-## Vérifier localement
+| Mode | Effet après déploiement réussi |
+|---|---|
+| `maintenance` | Remplace toutes les pages par l’ancienne page d’attente, adaptée en « Maintenance en cours ». |
+| `site` | Régénère, teste et remet le site complet en ligne. |
 
-Node est indiqué dans `.node-version` (26.8.2). Aucune dépendance npm externe.
+Aucun fichier de configuration à éditer, aucun secret à fournir.
+Le choix n’est pas un changement de source ni un interrupteur instantané :
+il faut attendre la fin du workflow. Un push laisse le mode actuellement publié
+inchangé. Le mode maintenance fonctionne sans installer npm et sans analyser les
+Markdown. Il ne masque pas les fichiers déjà présents dans ce dépôt public.
+
+[Mode maintenance, limites et retour arrière](docs/MAINTENANCE.md).
+
+## Première version et contenus à compléter
+
+- Neuf dates d’archives sourcées ; aucune prestation future inventée.
+- Les exemples d’agenda et fiches Lorem ipsum de la maquette ne sont pas importés.
+- La galerie et les portraits attendent des contenus validés. **Les photos de
+  la maquette ne sont ni dans ce dépôt ni dans l’artefact.** Confirmer les droits
+  de reproduction et le droit à l’image avant de les ajouter.
+- Les deux enregistrements actuels ont fait l’objet d’une confirmation des droits
+  de téléchargement/rediffusion le 29 septembre 2026 ; crédits dans
+  [`contenu/musique.md`](contenu/musique.md). Aucune licence libre revendiquée.
+- Le réglage `noindex, nofollow` reste provisoire. Ce n’est pas une protection
+  d’accès. Identité du responsable et mentions légales restent à compléter avec
+  la banda avant la diffusion officielle ; aucun nom ni adresse ne sont inventés.
+- `npm run check:publication` refuse les événements et musiciens encore marqués
+  `Exemple : oui`. Il ne certifie pas les droits ou l’exactitude des informations.
+
+## Développer et vérifier en local
+
+Node **26.8.2**, indiqué dans `.node-version` ; npm fourni avec Node.
 
 ```bash
 npm ci --ignore-scripts
 npm test
-python3 -m http.server 8015 --bind 127.0.0.1 --directory site
+npm run check:publication
+npm run dev                  # http://127.0.0.1:8013/ ; boucle locale seulement
 ```
 
-Puis ouvrir http://127.0.0.1:8015/. Avec mise, préfixer les commandes npm par
-`mise exec node@26.8.2 --` si Node n’est pas déjà sélectionné.
+```bash
+npm run build                # site complet dans site/, sans publication
+npm run test:maintenance     # contrôle autonome, même sans node_modules/
+npm run build:maintenance    # remplace la sortie locale par la maintenance
+npm run build                # rétablit la sortie locale complète
+```
 
-`src/` est la source ; **ne jamais éditer `site/`**, qui est reconstruit.
-Le build ne copie que les quatre ressources prévues et crée `.nojekyll`.
-Une source absente ne détruit pas la dernière génération réussie.
+Les builds préparent une sortie temporaire puis remplacent `site/` seulement
+après succès. `build/` contient du **code source**, pas des fichiers générés.
+Les tests de provenance nécessitant les archives privées sont ignorés en CI ;
+les validations portables et les tests de génération restent exécutés.
+Les tests navigateur et auditifs ne sont pas annoncés comme exécutés par cette CI.
 
-## Périmètre et sécurité
+## Publication et sécurité
 
-`.gitignore` fonctionne comme une **liste fermée** : seuls les fichiers de cette
-première version peuvent être ajoutés normalement. Toute extension du périmètre
-doit être délibérée. Ne pas utiliser `git add -f` pour ajouter des fichiers privés.
-Un dépôt public expose ses sources et son historique, pas seulement le site affiché.
+- CI automatique : `push`, `pull_request`, déclenchement manuel ; `contents: read`.
+- Publication : uniquement `workflow_dispatch`, depuis `main`, tests et contrôle
+  éditorial pour `site`, contrôles autonomes pour `maintenance`.
+- Seul le job de déploiement a `pages: write` et `id-token: write`.
+- Actions officielles épinglées par SHA, dépendances npm verrouillées.
+- Seul `site/` est envoyé à Pages. Les sources du dépôt restent néanmoins publiques.
+- `.gitignore` autorise explicitement les sources et les médias actuels : vérifier
+  les fichiers suivis avant chaque ajout. Ne pas utiliser `git add -f` pour passer
+  outre ; ajouter le chemin d’un nouveau média uniquement après validation.
+- Aucun mot de passe ni jeton personnel dans le dépôt ou les workflows.
 
-Le logo est le dérivé proportionnel du dessin fourni pour Loz’Banda, sans
-recoloration ni invention de traits. Source de référence :
-[fiche municipale du Chastel-Nouvel](https://www.chastel-nouvel.fr/store/lozbanda/).
-Aucune licence ouverte n’est attribuée à l’illustration.
-
-La page ne promet pas de date d’ouverture. `noindex, nofollow` est provisoire,
-mais ne protège pas l’accès : cette page et ce dépôt sont destinés à être publics.
-
-## Passage au site complet
-
-Importer les sources Eleventy, Markdown et médias validés dans **une branche**,
-adapter la liste Git et remplacer les workflows de cette première version par
-ceux du site complet. Les trois exemples fictifs devront être supprimés ou
-remplacés par des dates confirmées. Vérifier les droits des photos et les mentions
-légales ; maintenir une publication manuelle après CI. Ne pas copier le dossier
-de travail privé ni simplement désactiver les garde-fous.
+L’historique conserve la première page d’attente et le renommage du dépôt.
+Pour corriger une publication, utiliser un nouveau commit ou `git revert`, puis
+un déploiement manuel ; ne pas supprimer le dépôt ni réécrire son historique.

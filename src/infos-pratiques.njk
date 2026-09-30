@@ -1,0 +1,20 @@
+---
+layout: base.njk
+permalink: infos-pratiques.html
+pageId: infos-pratiques
+title: Infos pratiques — Loz’Banda
+description: Contacter Loz’Banda pour une fête de village, une animation de rue ou un rendez-vous en musique. Infos pratiques sur la banda du Chastel-Nouvel, en Lozère.
+ogDescription: Présentation, informations utiles et contact de Loz’Banda, la banda du Chastel-Nouvel.
+---
+<main id="contenu" class="container page" tabindex="-1">
+  <h1 class="sr-only">Infos pratiques</h1>
+  <div class="info-grid">
+    {% for card in contenus.infos %}
+    <section aria-labelledby="{{ card.id }}">
+      <h2 id="{{ card.id }}">{{ card.titre }}</h2>
+      {{ card.html | safe }}
+      {% if card.button %}<a class="button" href="{{ card.button.url }}"{% if card.button.url.startsWith('https:') %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ card.button.libelle }} <span aria-hidden="true">↗</span></a>{% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</main>

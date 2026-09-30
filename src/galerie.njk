@@ -1,0 +1,26 @@
+---
+layout: base.njk
+permalink: galerie.html
+pageId: galerie
+title: Galerie photo — Loz’Banda
+description: "Loz’Banda en images : retrouvez les photos des musiciens, des fêtes et des sorties de la banda du Chastel-Nouvel."
+ogDescription: "Des cuivres, des sourires et des souvenirs : la banda, en images."
+---
+<main id="contenu" class="container page gallery-page" tabindex="-1">
+  <h1 class="sr-only">Galerie photo</h1>
+  <div class="photo-grid" id="photos">
+    {% for photo in contenus.gallery %}
+    <figure>
+      <a class="photo-link" data-photo-index="{{ loop.index0 }}" href="{{ photo.image }}" aria-label="Agrandir : {{ photo.titre }}" data-title="{{ photo.titre }}" data-description="{{ photo.description }}">
+        <img src="{{ photo.miniature }}"{% if photo.srcset %} srcset="{{ photo.srcset }}"{% endif %}
+             sizes="{{ contenus.photoSizes }}" width="{{ photo.width }}" height="{{ photo.height }}"
+             {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async"
+             alt="{{ photo.alt }}">
+      </a>
+    </figure>
+    {% else %}
+    <p>Les photos de la banda arrivent bientôt.</p>
+    {% endfor %}
+  </div>
+  {% include "gallery-dialog.njk" %}
+</main>
