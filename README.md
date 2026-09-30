@@ -4,7 +4,8 @@ Première version du site : **une page d’attente en français**, le logo authe
 et le contact de la banda. Aucun calendrier fictif, galerie, audio, traceur ou
 script visiteur. Le site complet est préparé séparément et n’est pas dans ce dépôt.
 
-URL prévue après publication : **https://lozbanda.github.io/lozbanda/**.
+Site public : **https://lozbanda.github.io/**.
+Le dépôt `lozbanda.github.io` publie directement à la racine, sans sous-dossier.
 
 ## Modifier la page
 
