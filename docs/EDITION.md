@@ -69,7 +69,7 @@ sont facultatifs selon les preuves disponibles ; ne pas inventer de licence.
 La source vidéo est une provenance, jamais une URL de lecture distante.
 Les fichiers non déclarés ne sont pas copiés dans l’artefact.
 
-Conserver les crédits et empreintes des deux enregistrements déjà autorisés.
+Conserver les crédits et l’empreinte de l’enregistrement actuel, « La Lozère bat des ailes ».
 Une nouvelle piste exige sa propre autorisation ; l’accord existant ne la couvre pas.
 La musique démarre au clic, sans avance automatique, et continue entre les pages
 internes. Une recharge complète, une fermeture ou le départ du site l’arrête.

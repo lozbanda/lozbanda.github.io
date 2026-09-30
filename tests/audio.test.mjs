@@ -68,7 +68,7 @@ test('crédits Markdown relus sans cache, ordre explicite, empreinte protectrice
 
 test('un lien vidéo seul ne remplace jamais le lecteur local', t => {
   const f = fixture(t);
-  f.md('## Vidéo de référence\n\n- Source : [YouTube](https://www.youtube.com/watch?v=89_KXT5ztTU)');
+  f.md('## Vidéo de référence\n\n- Source : [YouTube](https://www.youtube.com/watch?v=exemple-test)');
   assert.throws(() => loadMusic(f.root), /Fichier est obligatoire/);
 });
 
@@ -213,7 +213,7 @@ test('amélioration progressive sans chargement, lecture ni stockage à l’init
   assert.equal(p.audio.requests.length, 0);
   assert.equal(p.audio.loadCount, 0);
   assert.equal(p.nodes.position.disabled, true);
-  assert.equal(p.nodes.time.textContent, '0:00 / —');
+  assert.equal(p.nodes.time.textContent, '0:00');
   assert.equal(p.nodes.toggle.attributes['aria-label'], 'Lire : Premier');
   const source = readFileSync(join(project, 'src/music-player.js'), 'utf8');
   assert.doesNotMatch(source, /localStorage|sessionStorage|indexedDB|document\.cookie|fetch\(|new Audio|\.loop\s*=|\.autoplay\s*=/);
@@ -356,8 +356,11 @@ test('imports YouTube autorisés : sources exactes, empreintes privées et duré
 }, () => {
   const manifest = JSON.parse(readFileSync(join(project, 'sources/audio/youtube-20260929/manifest-autorise.json'), 'utf8'));
   assert.equal(manifest.authorization.openLicenseClaimed, false);
-  assert.deepEqual(manifest.tracks.map(track => track.id), ['89_KXT5ztTU', 'fbBAo3xfHTU']);
+  assert.ok(manifest.tracks.length > 0);
+  assert.equal(new Set(manifest.tracks.map(track => track.id)).size, manifest.tracks.length);
+  const activeSources = loadMusic(project).tracks.map(track => track.source);
   for (const track of manifest.tracks) {
+    assert.ok(activeSources.includes(track.source), 'Le manifeste actif ne conserve pas de morceau retiré');
     for (const artifact of [track.original, track.metadata]) {
       assert.ok(artifact.file.startsWith('sources/audio/youtube-20260929/originaux/'));
       assert.equal(digest(readFileSync(join(project, artifact.file))), artifact.sha256);

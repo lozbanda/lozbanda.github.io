@@ -36,7 +36,7 @@ export function initMusicPlayer(root) {
     position.disabled = !known;
     position.max = known ? duration : 100;
     position.value = known ? Math.min(current, duration) : 0;
-    time.textContent = `${clock(current)} / ${known ? clock(duration) : '—'}`;
+    time.textContent = known ? `${clock(current)} / ${clock(duration)}` : clock(current);
     position.setAttribute('aria-valuetext', known ? `${clock(current)} sur ${clock(duration)}` : 'Durée inconnue');
   }
   function stop() {

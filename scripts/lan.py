@@ -137,7 +137,7 @@ def serve(host, port):
         raise ValueError('site/index.html manque : générer le site avant de le partager.')
     handler = partial(CompiledSiteHandler, directory=str(SITE))
     with ThreadingHTTPServer((host, port), handler) as server:
-        print(f'Site compilé : http://{host}:{port}/ — racine : {SITE}', flush=True)
+        print(f'Site compilé : http://{host}:{port}/, racine : {SITE}', flush=True)
         server.serve_forever()
 
 
@@ -155,7 +155,7 @@ def start(host, port):
     address = lan_address(host)
     subprocess.run([
         'systemd-run', '--user', '--collect', f'--unit={UNIT}', '--service-type=exec',
-        f'--description=LozBanda — site compilé — http://{address}:{port}/',
+        f'--description=LozBanda, site compilé, http://{address}:{port}/',
         f'--working-directory={ROOT}', '--property=NoNewPrivileges=yes',
         '--property=UMask=0077',
         sys.executable, '-u', str(Path(__file__).resolve()), 'serve',

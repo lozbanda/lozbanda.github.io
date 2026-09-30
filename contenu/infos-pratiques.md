@@ -12,7 +12,9 @@ Une prise en charge partielle des frais d’école de musique est possible. Cont
 
 ## Rejoindre la banda
 
-Vous jouez d’un instrument et souhaitez partager la musique en groupe ? Présentez-nous votre instrument, votre parcours et vos envies. Faisons connaissance et voyons ensemble comment vous accueillir dans la banda.
+- Bouton : [Facebook](https://www.facebook.com/profile.php?id=100063130515732)
+
+Vous jouez d’un instrument et souhaitez partager la musique en groupe ? Écrivez-nous sur Facebook pour nous présenter votre instrument, votre parcours et vos envies. Nous pourrons faire connaissance et voir ensemble comment vous accueillir dans la banda.
 
 ## Inviter Loz’Banda
 

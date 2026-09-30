@@ -33,7 +33,7 @@ test('musiciens : champs manquants ou ambigus, chemins distants et traversées r
   for (const image of ['https://example.org/a.jpg', '/assets/musiciens/a.png', 'assets/musiciens/../a.png', 'assets/musiciens/%2e%2e/a.png', 'assets/musiciens/a.svg', 'assets/musiciens/a.webp?x=1', 'assets/autre/a.jpg']) {
     invalid.push(member.replace('- Instrument', `- Photo : ${image}\n- Instrument`));
   }
-  for (const source of invalid) assert.throws(() => parseMusicians(source), /contenu\/musiciens.md:\d+ — Camille/);
+  for (const source of invalid) assert.throws(() => parseMusicians(source), /contenu\/musiciens.md:\d+ : Camille/);
 });
 
 test('musiciens : contrôle des portraits locaux, dimensions réelles et erreur contextualisée', () => {
@@ -48,7 +48,7 @@ test('musiciens : contrôle des portraits locaux, dimensions réelles et erreur 
     const file = join(root, 'contenu/musiciens.md');
     const photo = member.replace('- Instrument', '- Photo : assets/musiciens/camille.webp\n- Instrument');
     writeFileSync(file, photo);
-    assert.throws(() => loadContent(root), /contenu\/musiciens.md:\d+ — Camille : image absente/);
+    assert.throws(() => loadContent(root), /contenu\/musiciens.md:\d+ : Camille : image absente/);
     writeFileSync(join(root, 'src/assets/musiciens/camille.webp'), 'pas une image');
     assert.throws(() => loadContent(root), /format d’image invalide/);
     cpSync(new URL('../src/assets/logo.webp', import.meta.url), join(root, 'src/assets/musiciens/camille.webp'));

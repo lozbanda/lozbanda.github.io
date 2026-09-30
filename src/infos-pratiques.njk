@@ -2,10 +2,11 @@
 layout: base.njk
 permalink: infos-pratiques.html
 pageId: infos-pratiques
-title: Infos pratiques — Loz’Banda
+title: Infos pratiques | Loz’Banda
 description: Contacter Loz’Banda pour une fête de village, une animation de rue ou un rendez-vous en musique. Infos pratiques sur la banda du Chastel-Nouvel, en Lozère.
 ogDescription: Présentation, informations utiles et contact de Loz’Banda, la banda du Chastel-Nouvel.
 ---
+{% from "facebook-button.njk" import facebookButton %}
 <main id="contenu" class="container page" tabindex="-1">
   <h1 class="sr-only">Infos pratiques</h1>
   <div class="info-grid">
@@ -13,7 +14,13 @@ ogDescription: Présentation, informations utiles et contact de Loz’Banda, la 
     <section aria-labelledby="{{ card.id }}">
       <h2 id="{{ card.id }}">{{ card.titre }}</h2>
       {{ card.html | safe }}
-      {% if card.button %}<a class="button" href="{{ card.button.url }}"{% if card.button.url.startsWith('https:') %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ card.button.libelle }} <span aria-hidden="true">↗</span></a>{% endif %}
+      {% if card.button %}
+        {% if card.button.url == site.facebook %}
+          {{ facebookButton(card.button.url, card.button.libelle) }}
+        {% else %}
+          <a class="button" href="{{ card.button.url }}"{% if card.button.url.startsWith('https:') %} target="_blank" rel="noopener noreferrer" aria-label="{{ card.button.libelle }}, nouvel onglet"{% endif %}>{{ card.button.libelle }}</a>
+        {% endif %}
+      {% endif %}
     </section>
     {% endfor %}
   </div>

@@ -16,8 +16,8 @@ export function showSource(link, source) {
   link.hidden = !source;
   if (source) {
     link.href = source.url;
-    link.textContent = `${source.libelle} ↗`;
-    link.setAttribute('aria-label', `${source.libelle} — nouvel onglet`);
+    link.textContent = source.libelle;
+    link.setAttribute('aria-label', `${source.libelle}, nouvel onglet`);
   } else {
     link.removeAttribute('href');
     link.removeAttribute('aria-label');

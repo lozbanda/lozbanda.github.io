@@ -49,10 +49,10 @@ export function parseMusic(source, file = editorial) {
       if (demo && (!author || !url || !license || !changes)) fail('Une démonstration attend Crédit, Source, Licence et une description des modifications.');
       if (values.sha256 && !/^[a-f0-9]{64}$/.test(values.sha256)) fail('Empreinte SHA-256 : 64 caractères hexadécimaux minuscules.');
       return { title, file: name, source: url, sourceLabel: values.source ? text(values.source.libelle, 'Libellé Source') : '', author,
-        license, changes, demo, sha256: values.sha256 || '', context: `${file}:${section.line} — ${title}` };
+        license, changes, demo, sha256: values.sha256 || '', context: `${file}:${section.line} : ${title}` };
     } catch (error) {
       if (error.message.startsWith(`${file}:`)) throw error;
-      throw new Error(`${file}:${section.line} — ${section.title} : ${error.message}`);
+      throw new Error(`${file}:${section.line} : ${section.title} : ${error.message}`);
     }
   });
 }

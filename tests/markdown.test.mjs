@@ -30,7 +30,7 @@ test('dates et champs invalides refusés avec nom de fichier et entrée', () => 
     event.replace('- Lieu', '- Date : 2027-02-15\n- Lieu'), event.replace('- Date : 2027-02-15\n', ''),
     event + event.slice(event.indexOf('## ')), event.replace('Une **belle** soirée.', '### Un sous-titre'),
     event.replace('- Lieu : Salle des associations', '- Lieu : Salle\n  - Une sous-liste')]) {
-    assert.throws(() => parseEvents(invalid), /contenu\/agenda\.md:\d+ — Un rendez-vous/);
+    assert.throws(() => parseEvents(invalid), /contenu\/agenda\.md:\d+ : Un rendez-vous/);
   }
   assert.throws(() => parseEvents('## Sans titre de fichier\n'), /commencez par un titre/);
 });

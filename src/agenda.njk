@@ -20,7 +20,7 @@ ogDescription: "Les prochains rendez-vous de la banda, pour se retrouver en musi
           <p><time datetime="{{ event.date }}">{{ event.label }}</time></p>
           <p>{{ event.lieu }}</p>
           {% if event.description %}<p>{{ event.description }}</p>{% endif %}
-          {% if event.source %}<a class="source-link" href="{{ event.source.url }}" target="_blank" rel="noopener noreferrer">{{ event.source.libelle }} ↗</a>{% endif %}
+          {% if event.source %}<a class="source-link" href="{{ event.source.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ event.source.libelle }}, nouvel onglet">{{ event.source.libelle }}</a>{% endif %}
         </section>
         {% endfor %}
       </div>

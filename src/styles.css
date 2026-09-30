@@ -9,6 +9,7 @@
   --soft: #f0ebe4;
   --yellow: #ecbe29;
   --blue: #54d3ee;
+  --blue-hover: #35c4e2;
   --accent: #126579;
   --blue-soft: #eaf8fb;
 }
@@ -51,6 +52,7 @@ img { display: block; max-width: 100%; height: auto; }
 .home-header { min-height: 113.6px; }
 .hero { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: clamp(28px, 5vmin, 64px); padding-block: clamp(24px, 4vmin, 48px); }
 .hero-logo { width: 480px; flex: 0 0 auto; }
+.hero-copy { max-width: 100%; text-align: center; }
 .hero-body { display: flex; justify-content: center; align-items: center; gap: clamp(28px, 5vmin, 64px); width: 100%; max-width: 960px; }
 .hero h1 { max-width: 100%; text-align: center; font-size: clamp(1.125rem, 2.4vw, 2rem); line-height: 1.4; letter-spacing: -.025em; text-wrap: balance; }
 h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.4rem, 4.5vw, 3.5rem); font-weight: 400; line-height: 1.15; letter-spacing: -.05em; }
@@ -78,13 +80,16 @@ h1 em { color: var(--accent); font-weight: 400; }
 .musician-fiction { display: block; margin-top: 4px; color: var(--muted); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; font-size: .75rem; line-height: 1.5; letter-spacing: normal; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 24px; max-width: 100%; margin-top: 26px; min-height: 48px; padding: 12px 22px; background: var(--yellow); border: 1px solid transparent; border-radius: 999px; font-weight: 650; text-decoration: none; transition: background .15s; }
 .button:hover { background: #e8b719; }
+.button--secondary { background: var(--blue); color: var(--ink); }
+.button--secondary:hover { background: var(--blue-hover); }
+.facebook-callout { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 24px; padding: 16px 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--blue-soft); }
+.facebook-callout p { flex: 1 1 260px; min-width: 0; color: var(--accent); }
+.facebook-callout .button { flex: 0 0 auto; margin-top: 0; }
 .photo-link { display: block; overflow: hidden; border-radius: 6px; cursor: zoom-in; }
 .photo-link img { width: 100%; border-radius: 6px; object-fit: cover; transition: transform .25s ease; }
 .photo-grid img { aspect-ratio: 3 / 2; }
 /* Même cadrage bas que les miniatures du bus, y compris avec le grand fichier. */
 .photo-link[href="assets/bus-full.webp"] img { object-position: center bottom; }
-/* Préserver les visages de la rangée supérieure du portrait de groupe. */
-.photo-link[href="assets/facebook/groupe-espalion-2023-full.webp"] img { object-position: center top; }
 .photo-link[href="assets/facebook/collection-20260929/plein-air-06-full.webp"] img { object-position: center bottom; }
 .photo-link:hover { outline: 2px solid var(--accent); outline-offset: 3px; }
 .photo-link:hover img { transform: scale(1.025); }
@@ -96,7 +101,6 @@ h1 em { color: var(--accent); font-weight: 400; }
 .site-footer > * { min-width: 0; }
 .site-footer .source-link { margin-top: 0; }
 .email-link { display: inline-block; min-height: 44px; padding-block: 9px; overflow-wrap: anywhere; }
-.email-link span { margin-left: 8px; }
 
 .gallery-dialog { width: min(1280px, calc(100% - 32px)); max-width: none; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); margin: auto; padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); overscroll-behavior: contain; box-shadow: 0 24px 80px #0005; }
 .gallery-dialog:not([open]) { display: none; }
@@ -141,6 +145,7 @@ h1 em { color: var(--accent); font-weight: 400; }
   .home { width: calc(100% - 32px); }
   .gallery-page { width: calc(100% - 24px); }
   .photo-grid { gap: 18px; }
+  .facebook-callout { justify-content: center; margin-bottom: 18px; padding: 18px; text-align: center; }
   .button { margin-top: 22px; }
   .page { padding-block: 18px 36px; }
   .info-grid { grid-template-columns: 1fr; gap: 18px; }

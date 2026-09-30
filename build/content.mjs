@@ -16,7 +16,7 @@ const musicianFields = { Instrument: 'instrument', Photo: 'image', Alternative: 
 
 function fail(context, message, token) {
   const line = token?.map ? token.map[0] + 1 : context.line;
-  throw new Error(`${context.file}:${line} — ${context.title || 'document'} : ${message}`);
+  throw new Error(`${context.file}:${line} : ${context.title || 'document'} : ${message}`);
 }
 
 function text(tokens, context) {

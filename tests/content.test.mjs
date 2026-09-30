@@ -64,8 +64,8 @@ test('photos Facebook locales, sources et empreintes conservées, aucune URL CDN
     && manifest.images.some(image => image.derives.some(file => file.fichier === 'src/' + photo.image))));
   assert.doesNotMatch(JSON.stringify(photos), /fbcdn|scontent/);
   assert.equal(manifest.images.find(i => i.nom.startsWith('salagou')).evenementDate, null);
-  for (const name of ['groupe-espalion-2023', 'groupe-plein-air-2019']) {
-    assert.equal(manifest.images.find(i => i.nom === name).evenementDate, null, 'La publication ne date pas la prise de vue');
+  for (const image of manifest.images.filter(image => image.nom.startsWith('groupe-'))) {
+    assert.equal(image.evenementDate, null, 'La publication ne date pas la prise de vue');
   }
 });
 

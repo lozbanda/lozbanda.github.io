@@ -45,6 +45,20 @@ test('cinq vraies pages avec titres distincts, structure et ancres accessibles',
   assert.equal(descriptions.size, 5);
 });
 
+test('sortie éditoriale et code du site sans symboles décoratifs supprimés', () => {
+  function checkDirectory(directory) {
+    for (const name of readdirSync(directory)) {
+      if (name === 'vendor') continue;
+      const path = join(directory, name);
+      if (statSync(path).isDirectory()) checkDirectory(path);
+      else if (/\.(?:html|css|js|json)$/.test(name)) {
+        assert.doesNotMatch(readFileSync(path, 'utf8'), /[\u2197\u2014]/u, path);
+      }
+    }
+  }
+  checkDirectory(root);
+});
+
 test('quatre liens natifs, logo avant le titre sur l’accueil et retour depuis les autres pages', () => {
   for (const [name, page] of Object.entries(pages)) {
     const header = page.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)[1];
@@ -69,7 +83,7 @@ test('quatre liens natifs, logo avant le titre sur l’accueil et retour depuis 
   assert.match(css, /\.site-header \{[^}]*justify-content: center;[^}]*align-items: center;/);
 });
 
-test('accueil : titre, logo et musique sans CTA, contact en pied de page, agenda sourcé', () => {
+test('accueil : titre, logo, musique et Facebook, contact en pied de page, agenda sourcé', () => {
   assert.equal((html.match(/<img\b/g) ?? []).length, 1, 'Le logo seulement sur l’accueil');
   assert.doesNotMatch(html, /photo-link|<dialog|sorties\.json/);
   assert.doesNotMatch(html, /home-contact|Contacter la banda/);
@@ -102,6 +116,9 @@ test('playlist publiée issue du Markdown : vrai lecteur de fichiers locaux, auc
   assert.equal(html.includes('href="music-player.css"'), music.tracks.length > 0);
   for (const item of music.tracks) assert.ok(html.includes(`value="${escape(item.src)}"`));
   assert.doesNotMatch(html, /music-links|youtube-nocookie|<iframe/);
+  const directory = join(root, 'assets/audio');
+  const published = existsSync(directory) ? readdirSync(directory).sort() : [];
+  assert.deepEqual(published, music.tracks.map(track => track.file).sort(), 'Aucun ancien fichier audio dans le site compilé');
 });
 
 test('pages secondaires compactes : titre accessible invisible, archives avant le calendrier', () => {
@@ -227,7 +244,7 @@ test('contrastes des couleurs de texte, navigation active et focus', () => {
       .map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
     return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
   }
-  for (const [a, b, minimum] of [['ink', 'paper', 7], ['muted', 'paper', 4.5], ['accent', 'paper', 4.5], ['accent', 'surface', 4.5], ['accent', 'soft', 4.5], ['accent', 'blue-soft', 4.5], ['ink', 'blue-soft', 7], ['ink', 'yellow', 4.5], ['accent', 'yellow', 3], ['ink', 'blue', 4.5]]) {
+  for (const [a, b, minimum] of [['ink', 'paper', 7], ['muted', 'paper', 4.5], ['accent', 'paper', 4.5], ['accent', 'surface', 4.5], ['accent', 'soft', 4.5], ['accent', 'blue-soft', 4.5], ['ink', 'blue-soft', 7], ['ink', 'yellow', 4.5], ['accent', 'yellow', 3], ['ink', 'blue', 4.5], ['ink', 'blue-hover', 4.5], ['accent', 'blue', 3], ['accent', 'blue-hover', 3]]) {
     const values = [luminance(colors[a]), luminance(colors[b])].sort((x, y) => y - x);
     assert.ok((values[0] + .05) / (values[1] + .05) >= minimum, `${a}/${b}`);
   }

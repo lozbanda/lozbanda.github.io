@@ -6,7 +6,7 @@
 
 Site statique français, généré par Eleventy à partir de cinq fichiers Markdown.
 Logo authentique, calendrier local, galerie progressive, musiciens, informations
-pratiques et deux morceaux locaux autorisés. Aucun CMS, police distante ou traqueur.
+pratiques et un morceau local autorisé. Aucun CMS, police distante ou traqueur.
 
 ## Modifier le contenu directement sur GitHub
 
@@ -46,8 +46,8 @@ Markdown. Il ne masque pas les fichiers déjà présents dans ce dépôt public.
 - La galerie et les portraits attendent des contenus validés. **Les photos de
   la maquette ne sont ni dans ce dépôt ni dans l’artefact.** Confirmer les droits
   de reproduction et le droit à l’image avant de les ajouter.
-- Les deux enregistrements actuels ont fait l’objet d’une confirmation des droits
-  de téléchargement/rediffusion le 29 septembre 2026 ; crédits dans
+- L’enregistrement actuel, « La Lozère bat des ailes », a fait l’objet d’une
+  confirmation des droits de téléchargement/rediffusion le 29 septembre 2026 ; crédits dans
   [`contenu/musique.md`](contenu/musique.md). Aucune licence libre revendiquée.
 - Le réglage `noindex, nofollow` reste provisoire. Ce n’est pas une protection
   d’accès. Identité du responsable et mentions légales restent à compléter avec

@@ -159,7 +159,7 @@ test('Git : seuls les sources et médias validés sont autorisés, jamais les ar
   execFileSync('git', ['init', '--quiet', '-b', 'main', directory]);
   const allowed = ['contenu/agenda.md', 'src/index.njk', 'src/styles.css', 'src/_includes/base.njk',
     'build/content.mjs', 'build/dev-server/index.cjs', 'maintenance/index.html', 'docs/EDITION.md',
-    'src/assets/logo.webp', 'src/assets/audio/01-jimmy-sax-no-man-no-cry-live.mp3',
+    'src/assets/logo.webp', 'src/assets/audio/02-lozbanda-la-lozere-bat-des-ailes.mp3',
     '.github/workflows/pages.yml', 'tests/maintenance.test.mjs'];
   const ignored = ['.env', 'password.txt', 'sources/original.jpg', 'src/assets/facebook/inconnue.jpg',
     'src/assets/photo.jpg', 'src/assets/audio/non-autorise.mp3', 'site/index.html',

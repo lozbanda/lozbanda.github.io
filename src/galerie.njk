@@ -2,12 +2,17 @@
 layout: base.njk
 permalink: galerie.html
 pageId: galerie
-title: Galerie photo — Loz’Banda
+title: Galerie photo | Loz’Banda
 description: "Loz’Banda en images : retrouvez les photos des musiciens, des fêtes et des sorties de la banda du Chastel-Nouvel."
 ogDescription: "Des cuivres, des sourires et des souvenirs : la banda, en images."
 ---
+{% from "facebook-button.njk" import facebookButton %}
 <main id="contenu" class="container page gallery-page" tabindex="-1">
   <h1 class="sr-only">Galerie photo</h1>
+  <div class="facebook-callout">
+    <p>Pour suivre nos photos et la vie du groupe.</p>
+    {{ facebookButton(site.facebook) }}
+  </div>
   <div class="photo-grid" id="photos">
     {% for photo in contenus.gallery %}
     <figure>

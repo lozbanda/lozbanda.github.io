@@ -7,7 +7,7 @@
     </button>
     <div class="music-label">
       <p class="music-current" data-music-current>{{ musique.tracks[0].title }}</p>
-      <span class="music-kind" data-music-kind>{% if musique.tracks[0].demo %}Démo · {% endif %}</span><output data-music-time for="music-position" aria-live="off">0:00 / —</output>
+      <span class="music-kind" data-music-kind>{% if musique.tracks[0].demo %}Démo · {% endif %}</span><output data-music-time for="music-position" aria-live="off">0:00</output>
     </div>
     <button class="music-expand" type="button" data-music-expand aria-expanded="false" aria-controls="music-panel" aria-label="Afficher les morceaux et les crédits"><span aria-hidden="true">☰</span></button>
   </div>
@@ -19,7 +19,7 @@
     <div data-music-choices hidden>
       <label class="sr-only" for="music-track">Choisir un morceau</label>
       <select id="music-track" data-music-track>
-        {% for track in musique.tracks %}<option value="{{ track.src }}" data-title="{{ track.title }}" data-demo="{{ track.demo }}">{{ track.title }}{% if track.demo %} — démo{% endif %}</option>{% endfor %}
+        {% for track in musique.tracks %}<option value="{{ track.src }}" data-title="{{ track.title }}" data-demo="{{ track.demo }}">{{ track.title }}{% if track.demo %} (démo){% endif %}</option>{% endfor %}
       </select>
       <label class="sr-only" for="music-position">Position dans le morceau</label>
       <input id="music-position" data-music-position type="range" min="0" max="100" step="0.1" value="0" aria-valuetext="Durée inconnue" disabled>
@@ -31,7 +31,7 @@
         {% for track in musique.tracks %}
         <li>
           <strong>{{ track.title }}</strong>{% if track.demo %} (démo générique){% endif %}
-          {% if track.author %}<span>— {{ track.author }}</span>{% endif %}.
+          {% if track.author %}<span> : {{ track.author }}</span>{% endif %}.
           {% if track.source %}<a href="{{ track.source }}" target="_blank" rel="noopener noreferrer">Source</a>.{% endif %}
           {% if track.license %}<a href="{{ track.license.url }}" target="_blank" rel="noopener noreferrer">{{ track.license.name }}</a>.{% endif %}
           {% if track.changes %}<p>{{ track.changes }}</p>{% endif %}
