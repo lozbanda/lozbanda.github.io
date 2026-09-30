@@ -220,8 +220,17 @@ test('aperçu local : édition des cinq Markdown et sélection de fichiers audio
     writeFileSync(audioFile, wave); // Fixture de signature, pas un enregistrement publié.
     writeFileSync(join(root, 'contenu/musique.md'), '# Musique\n\n## Audio surveillé\n\n- Fichier : assets/audio/00-audio-surveille.wav\n');
     await waitFor('index.html', 'Audio surveillé');
-    const audioRange = await fetch(`http://127.0.0.1:${port}/assets/audio/00-audio-surveille.wav`, { headers: { Range: 'bytes=0-11' } });
-    assert.equal(audioRange.status, 206, 'L’aperçu permet de se déplacer dans les morceaux');
+    // Le HTML peut être écrit avant la fin de la copie passthrough du WAV.
+    // Attendre seulement ce 404 transitoire ; une réponse 200 reste un échec.
+    let audioRange;
+    for (const start = Date.now(); Date.now() - start < 20_000; await delay(100)) {
+      audioRange = await fetch(`http://127.0.0.1:${port}/assets/audio/00-audio-surveille.wav`, {
+        headers: { Range: 'bytes=0-11' }, signal: AbortSignal.timeout(1500),
+      });
+      if (audioRange.status !== 404) break;
+      await audioRange.arrayBuffer();
+    }
+    assert.equal(audioRange?.status, 206, 'L’aperçu permet de se déplacer dans les morceaux :\n' + log);
     assert.equal(audioRange.headers.get('Content-Range'), 'bytes 0-11/48');
     assert.deepEqual(Buffer.from(await audioRange.arrayBuffer()), wave.subarray(0, 12));
     writeFileSync(join(root, 'contenu/musique.md'), '# Musique\n');
