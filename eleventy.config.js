@@ -15,7 +15,7 @@ export default function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy({ [`src/assets/audio/${track.file}`]: `assets/audio/${track.file}` });
   }
   eleventyConfig.setServerOptions({ module: 'lozbanda-local-server', port: 8013 });
-  for (const path of ['vendor', 'styles.css', 'navigation.js', 'agenda.css', 'agenda.js',
+  for (const path of ['vendor', 'styles.css', 'navigation.js', 'logo-egg.js', 'agenda.css', 'agenda.js',
     'agenda-data.js', 'agenda-carousel.js', 'music-player.js', 'music-player.css', 'gallery.js', 'gallery-data.js', 'content-data.js', '.nojekyll']) {
     eleventyConfig.addPassthroughCopy({ [`src/${path}`]: path });
   }

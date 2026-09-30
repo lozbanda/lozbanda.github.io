@@ -30,10 +30,11 @@ seulement effacer le marqueur pour rendre un faux rendez-vous publiable.
 
 ## Galerie et portraits
 
-Les photos de la maquette locale ne sont pas encore validées pour le public et
-n’ont pas été importées. Une galerie vide est normale : un message l’indique.
+Les 24 photos et leurs descriptions de la version locale ont été reprises à la
+demande explicite de publication le 30 septembre 2026. Une galerie peut
+aussi être vide : un message l’indique alors. Les originaux privés restent exclus.
 
-Après confirmation des droits du photographe et du droit à l’image :
+Pour une nouvelle photo, après confirmation des droits du photographe et du droit à l’image :
 
 1. Optimiser l’image, retirer ses métadonnées privées et rester sous 1 Mo.
 2. Ajouter uniquement ce média à `src/assets/` (portrait : `src/assets/musiciens/`).
@@ -49,6 +50,14 @@ un paragraphe expliquant son choix. Portrait facultatif : `- Photo : assets/musi
 et éventuellement `- Alternative : Portrait de Prénom`. Sans photo, un emplacement
 neutre s’affiche ; sans fiche, la page annonce les portraits à venir.
 Ne jamais publier une identité fictive comme si elle appartenait au groupe.
+
+Les six profils nommés actuellement affichés sont expressément demandés comme
+**portraits fictifs**. Conserver `- Exemple : oui` : cela affiche la mention près
+de chaque nom. Le contrôle de publication n’autorise que ces six noms, définis dans
+`scripts/check-content.mjs`, et refuse qu’ils perdent leur marqueur. Une nouvelle
+fiche fictive reste bloquée sans décision éditoriale explicite. Pour passer à de
+vraies présentations validées, remplacer les blocs et ajuster cette liste d’exception
+si nécessaire, sans présenter les récits inventés comme des biographies réelles.
 
 ## Informations pratiques
 

@@ -126,6 +126,16 @@ test('publication : les exemples sont visibles en aperçu mais bloquent la mise 
     const draft = check();
     assert.equal(draft.status, 1);
     assert.match(draft.stderr, /Publication bloquée.*contenu\/musiciens.md/);
+    const approved = ['Camille Morel', 'Julien Perrin', 'Léa Garnier', 'Émile Roussel', 'Manon Delcourt', 'Hugo Bellier'];
+    writeFileSync(join(root, 'contenu/musiciens.md'), '# Musiciens\n\n' + approved.map(name =>
+      `## ${name}\n\n- Instrument : Trompette\n- Exemple : oui\n\nUn récit fictif signalé.\n`).join('\n'));
+    assert.equal(check().status, 0, 'Les six portraits fictifs expressément demandés sont publiables');
+    build(root);
+    assert.equal((read(root, 'site/musiciens.html').match(/\(portrait fictif\)/g) || []).length, 6);
+    change(root, 'contenu/musiciens.md', text => text.replace('- Exemple : oui', '- Exemple : non'));
+    const unmarked = check();
+    assert.equal(unmarked.status, 1, 'Interdit de transformer ces fictions en vraies identités');
+    assert.match(unmarked.stderr, /doivent garder Exemple : oui/);
     seed(root);
     assert.equal(check().status, 0);
   } finally { rmSync(root, { recursive: true, force: true }); }

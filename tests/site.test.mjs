@@ -73,7 +73,7 @@ test('quatre liens natifs, logo avant le titre sur l’accueil et retour depuis 
       assert.doesNotMatch(header, /<img\b|class="brand"|aria-current/);
       assert.match(page, /<section class="hero"[^>]*>\s*<div class="hero-body">/);
       assert.ok(page.indexOf('class="hero-logo"') < page.indexOf('<h1'));
-      assert.match(page, /<div class="hero-body">\s*<img class="hero-logo"/);
+      assert.match(page, /<div class="hero-body">\s*<button class="logo-egg"[^>]*>\s*<img class="hero-logo"/);
     } else {
       assert.ok(header.indexOf('class="brand"') < header.indexOf('<nav'), 'Le logo précède le menu, visuellement et au clavier');
       assert.match(header, /class="brand" href="index.html" aria-label="Loz’Banda, accueil"/);
@@ -298,14 +298,14 @@ test('carrousels natifs accessibles et espace fluide sur l’accueil', () => {
   }
 });
 
-test('budgets : présentation et navigation sous 95 Ko, lecteur flottant sous 13 Ko et images sous 1 Mo', () => {
+test('budgets : présentation et navigation sous 98 Ko, lecteur flottant sous 13 Ko et images sous 1 Mo', () => {
   const sourceRoot = fileURLToPath(new URL('../src/', import.meta.url));
   const codeSize = dir => readdirSync(dir).filter(name => name !== 'vendor').reduce((sum, name) => {
     const path = join(dir, name);
     return sum + (statSync(path).isDirectory() ? codeSize(path) : /\.(?:njk|js|css)$/.test(name) ? statSync(path).size : 0);
   }, 0);
-  // +5 Ko pour la page Musiciens et ses styles ; aucun JS visiteur supplémentaire.
-  assert.ok(codeSize(sourceRoot) < 95_000);
+  // +3 Ko pour la surprise du logo, elle-même testée sous 3 Ko, sans dépendance.
+  assert.ok(codeSize(sourceRoot) < 98_000);
   const checkImages = dir => {
     for (const name of readdirSync(dir)) {
       const path = join(dir, name);

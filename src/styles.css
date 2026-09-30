@@ -52,6 +52,8 @@ img { display: block; max-width: 100%; height: auto; }
 .home-header { min-height: 113.6px; }
 .hero { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: clamp(28px, 5vmin, 64px); padding-block: clamp(24px, 4vmin, 48px); }
 .hero-logo { width: 480px; flex: 0 0 auto; }
+.logo-egg { display: block; max-width: 100%; padding: 0; border: 0; border-radius: 8px; background: transparent; touch-action: manipulation; }
+.logo-egg:disabled { cursor: default; }
 .hero-copy { max-width: 100%; text-align: center; }
 .hero-body { display: flex; justify-content: center; align-items: center; gap: clamp(28px, 5vmin, 64px); width: 100%; max-width: 960px; }
 .hero h1 { max-width: 100%; text-align: center; font-size: clamp(1.125rem, 2.4vw, 2rem); line-height: 1.4; letter-spacing: -.025em; text-wrap: balance; }

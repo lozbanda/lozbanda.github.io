@@ -160,6 +160,9 @@ test('Git : seuls les sources et médias validés sont autorisés, jamais les ar
   const allowed = ['contenu/agenda.md', 'src/index.njk', 'src/styles.css', 'src/_includes/base.njk',
     'build/content.mjs', 'build/dev-server/index.cjs', 'maintenance/index.html', 'docs/EDITION.md',
     'src/assets/logo.webp', 'src/assets/audio/02-lozbanda-la-lozere-bat-des-ailes.mp3',
+    'src/assets/banda-1280.webp', 'src/assets/facebook/rentree-chastel-2026-full.webp',
+    'src/assets/facebook/collection-20260929/plein-air-01-full.webp',
+    'src/assets/partenaires/final-mende-2021-full.webp', 'src/logo-egg.js',
     '.github/workflows/pages.yml', 'tests/maintenance.test.mjs'];
   const ignored = ['.env', 'password.txt', 'sources/original.jpg', 'src/assets/facebook/inconnue.jpg',
     'src/assets/photo.jpg', 'src/assets/audio/non-autorise.mp3', 'site/index.html',

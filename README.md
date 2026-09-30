@@ -39,21 +39,30 @@ Markdown. Il ne masque pas les fichiers déjà présents dans ce dépôt public.
 
 [Mode maintenance, limites et retour arrière](docs/MAINTENANCE.md).
 
-## Première version et contenus à compléter
+## Contenus actuels et éléments à compléter
 
 - Neuf dates d’archives sourcées ; aucune prestation future inventée.
-- Les exemples d’agenda et fiches Lorem ipsum de la maquette ne sont pas importés.
-- La galerie et les portraits attendent des contenus validés. **Les photos de
-  la maquette ne sont ni dans ce dépôt ni dans l’artefact.** Confirmer les droits
-  de reproduction et le droit à l’image avant de les ajouter.
+- Les exemples d’agenda ne sont pas importés.
+- **24 photos** de la version locale, avec leurs descriptions et alternatives,
+  publiées sur demande explicite le 30 septembre 2026. Seuls les
+  71 fichiers optimisés correspondants sont importés, pas les originaux privés.
+  Aucune licence libre n’est revendiquée ; confirmer les droits pour tout nouvel ajout.
+- **Six portraits fictifs nommés**, repris du Markdown local sur demande explicite :
+  Camille Morel, Julien Perrin, Léa Garnier, Émile Roussel, Manon Delcourt et Hugo Bellier.
+  Chaque nom reste accompagné de « portrait fictif » ; il ne s’agit pas des membres réels.
+- Petite surprise sur l’accueil : trois activations rapprochées du logo lancent une
+  danse de 1,1 seconde. Aucun son ni autoplay ; Échap interrompt l’effet. Le clavier
+  fonctionne aussi et la préférence de mouvement réduit désactive l’animation.
 - L’enregistrement actuel, « La Lozère bat des ailes », a fait l’objet d’une
   confirmation des droits de téléchargement/rediffusion le 29 septembre 2026 ; crédits dans
   [`contenu/musique.md`](contenu/musique.md). Aucune licence libre revendiquée.
 - Le réglage `noindex, nofollow` reste provisoire. Ce n’est pas une protection
   d’accès. Identité du responsable et mentions légales restent à compléter avec
   la banda avant la diffusion officielle ; aucun nom ni adresse ne sont inventés.
-- `npm run check:publication` refuse les événements et musiciens encore marqués
-  `Exemple : oui`. Il ne certifie pas les droits ou l’exactitude des informations.
+- `npm run check:publication` refuse les événements fictifs et les fiches d’exemple
+  non approuvées. L’exception est limitée aux six noms ci-dessus, dont le marqueur
+  `Exemple : oui` reste obligatoire. Ce contrôle ne certifie pas les droits ou
+  l’exactitude des informations.
 
 ## Développer et vérifier en local
 
