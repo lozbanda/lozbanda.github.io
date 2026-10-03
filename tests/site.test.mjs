@@ -124,6 +124,11 @@ test('playlist publiée issue du Markdown : vrai lecteur de fichiers locaux, auc
   assert.equal(html.includes('<audio controls'), music.tracks.length > 0);
   assert.equal(html.includes('src="music-player.js"'), music.tracks.length > 0);
   assert.equal(html.includes('href="music-player.css"'), music.tracks.length > 0);
+  if (music.tracks.length) for (const page of Object.values(pages)) {
+    assert.match(page, /<details class="music-disclosure" data-music-disclosure>/);
+    assert.match(page, /<summary[^>]+data-music-launcher[^>]+aria-controls="music-body"/);
+    assert.equal((page.match(/id="music-body"/g) || []).length, 1);
+  }
   for (const item of music.tracks) assert.ok(html.includes(`value="${escape(item.src)}"`));
   assert.doesNotMatch(html, /music-links|youtube-nocookie|<iframe/);
   const directory = join(root, 'assets/audio');
@@ -308,14 +313,14 @@ test('carrousels natifs accessibles et espace fluide sur l’accueil', () => {
   }
 });
 
-test('budgets : présentation et navigation sous 98 Ko, lecteur flottant sous 13 Ko et images sous 1 Mo', () => {
+test('budgets : présentation et navigation sous 101 Ko, lecteur avec CD sous 16 Ko et images sous 1 Mo', () => {
   const sourceRoot = fileURLToPath(new URL('../src/', import.meta.url));
   const codeSize = dir => readdirSync(dir).filter(name => name !== 'vendor').reduce((sum, name) => {
     const path = join(dir, name);
     return sum + (statSync(path).isDirectory() ? codeSize(path) : /\.(?:njk|js|css)$/.test(name) ? statSync(path).size : 0);
   }, 0);
-  // +3 Ko pour la surprise du logo, elle-même testée sous 3 Ko, sans dépendance.
-  assert.ok(codeSize(sourceRoot) < 98_000);
+  // 95 Ko + 3 Ko pour le logo + 3 Ko pour le CD et son ouverture native, sans dépendance.
+  assert.ok(codeSize(sourceRoot) < 101_000);
   const checkImages = dir => {
     for (const name of readdirSync(dir)) {
       const path = join(dir, name);

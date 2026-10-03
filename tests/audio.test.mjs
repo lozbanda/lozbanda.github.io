@@ -148,6 +148,10 @@ test('HTML auto-échappé, un audio natif et crédits sans JS, aucun autoplay', 
   assert.match(html, /href="assets\/audio\/b.wav"/);
   assert.match(html, /type="range"[^>]+disabled/);
   assert.match(html, /aria-live="polite"/);
+  assert.match(html, /<details class="music-disclosure" data-music-disclosure>/, 'fermé dès le HTML, même sans JS');
+  assert.match(html, /<summary[^>]+data-music-launcher[^>]+aria-controls="music-body"/);
+  assert.match(html, /<svg[^>]+aria-hidden="true"[^>]+focusable="false"/);
+  assert.ok(html.indexOf('id="music-body"') < html.indexOf('<audio controls'));
 });
 
 class Element extends EventTarget {
@@ -178,9 +182,10 @@ class Media extends Element {
 }
 function player() {
   const audio = new Media();
-  const names = ['controls', 'track', 'toggle', 'position', 'time', 'status', 'action', 'icon', 'native-title', 'panel', 'expand', 'current', 'choices', 'kind'];
+  const names = ['controls', 'track', 'toggle', 'position', 'time', 'status', 'action', 'icon', 'native-title', 'panel', 'expand', 'current', 'choices', 'kind', 'disclosure', 'launcher', 'body'];
   const nodes = Object.fromEntries(names.map(name => [name, new Element()]));
   nodes.controls.hidden = true;
+  nodes.disclosure.open = false;
   nodes.track.options = [
     { value: 'assets/audio/a.mp3', dataset: { title: 'Premier', demo: 'true' } },
     { value: 'assets/audio/b.mp3', dataset: { title: 'Second' } },
@@ -194,12 +199,14 @@ function player() {
   const view = new EventTarget();
   const root = {
     ownerDocument: { defaultView: view, body: { classList: { add() {} } } },
-    setAttribute() {},
+    attributes: {},
+    setAttribute(key, value) { this.attributes[key] = String(value); },
     querySelector(query) { return query === 'audio' ? audio : nodes[query.slice(12, -1)]; },
   };
   initMusicPlayer(root);
   return {
-    audio, nodes, view,
+    audio, nodes, view, root,
+    reveal(open) { nodes.disclosure.open = open; nodes.disclosure.dispatchEvent(new Event('toggle')); },
     click() { nodes.toggle.dispatchEvent(new Event('click')); },
     select(index) { nodes.track.selectedIndex = index; nodes.track.dispatchEvent(new Event('change')); },
     event(name) { audio.dispatchEvent(new Event(name)); },
@@ -210,6 +217,9 @@ test('amélioration progressive sans chargement, lecture ni stockage à l’init
   const p = player();
   assert.equal(p.audio.hidden, true);
   assert.equal(p.nodes.controls.hidden, false);
+  assert.equal(p.nodes.disclosure.open, false);
+  assert.equal(p.nodes.launcher.attributes['aria-expanded'], 'false');
+  assert.equal(p.nodes.launcher.attributes['aria-label'], 'Afficher le lecteur de musique');
   assert.equal(p.audio.requests.length, 0);
   assert.equal(p.audio.loadCount, 0);
   assert.equal(p.nodes.position.disabled, true);
@@ -219,8 +229,54 @@ test('amélioration progressive sans chargement, lecture ni stockage à l’init
   assert.doesNotMatch(source, /localStorage|sessionStorage|indexedDB|document\.cookie|fetch\(|new Audio|\.loop\s*=|\.autoplay\s*=/);
 });
 
+test('bouton CD : ouvrir et fermer sans charger ni lancer la musique', () => {
+  const p = player();
+  p.reveal(true);
+  assert.equal(p.nodes.launcher.attributes['aria-expanded'], 'true');
+  assert.equal(p.nodes.launcher.attributes['aria-label'], 'Masquer le lecteur de musique');
+  p.reveal(false);
+  assert.equal(p.nodes.launcher.attributes['aria-expanded'], 'false');
+  assert.equal(p.nodes.launcher.attributes['aria-label'], 'Afficher le lecteur de musique');
+  assert.equal(p.root.attributes['data-playing'], 'false');
+  assert.equal(p.audio.requests.length, 0);
+  assert.equal(p.audio.loadCount, 0);
+});
+
+test('le CD masque une lecture sans la couper, la relancer ou perdre la position', async () => {
+  const p = player();
+  p.reveal(true); p.click(); p.audio.requests[0].resolve(); await tick();
+  p.audio.currentTime = 17;
+  p.nodes.expand.dispatchEvent(new Event('click'));
+  p.reveal(false);
+  assert.equal(p.nodes.panel.hidden, true);
+  assert.equal(p.audio.paused, false);
+  assert.equal(p.root.attributes['data-playing'], 'true');
+  assert.equal(p.nodes.launcher.attributes['aria-label'], 'Afficher le lecteur de musique (lecture en cours)');
+  p.reveal(true);
+  assert.equal(p.audio.currentTime, 17);
+  assert.equal(p.audio.requests.length, 1);
+  assert.equal(p.audio.loadCount, 0);
+  p.click();
+  assert.equal(p.root.attributes['data-playing'], 'false');
+  assert.equal(p.nodes.status.textContent, '');
+});
+
+test('Échap referme le lecteur et rend le focus au CD, sans modifier la lecture', () => {
+  const p = player();
+  p.reveal(true); p.click();
+  p.nodes.toggle.dispatchEvent(Object.assign(new Event('keydown', { cancelable: true }), { key: 'Escape' }));
+  assert.equal(p.nodes.disclosure.open, false);
+  assert.equal(p.nodes.launcher.attributes['aria-expanded'], 'false');
+  assert.equal(p.nodes.launcher.focused, true);
+  assert.equal(p.audio.paused, false);
+  p.reveal(true);
+  p.nodes.launcher.dispatchEvent(Object.assign(new Event('keydown'), { key: 'Escape' }));
+  assert.equal(p.nodes.disclosure.open, false);
+});
+
 test('mini-lecteur : titre, démo et panneau refermable sans arrêter le morceau', () => {
   const p = player();
+  p.reveal(true);
   assert.equal(p.nodes.panel.hidden, true);
   assert.equal(p.nodes.current.textContent, 'Premier');
   assert.equal(p.nodes.kind.textContent, 'Démo · ');
@@ -342,9 +398,9 @@ test('pause externe, durée infinie et sortie de page restent cohérentes', asyn
   assert.equal(p.nodes.action.textContent, 'Lire');
 });
 
-test('budget du lecteur flottant inférieur à 13 Ko, contrôles 44 px et pas de mouvement', () => {
+test('budget du lecteur et du CD inférieur à 16 Ko, contrôles 44 px et pas de mouvement', () => {
   const files = ['src/music-player.js', 'src/music-player.css', 'src/_includes/music-player.njk'];
-  assert.ok(files.reduce((sum, file) => sum + statSync(join(project, file)).size, 0) <= 13000);
+  assert.ok(files.reduce((sum, file) => sum + statSync(join(project, file)).size, 0) <= 16000);
   const css = readFileSync(join(project, 'src/music-player.css'), 'utf8');
   assert.match(css, /min-height: 44px/);
   assert.match(css, /focus-visible/);

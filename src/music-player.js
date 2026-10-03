@@ -6,7 +6,21 @@ export function initMusicPlayer(root) {
   const position = find('position'), time = find('time'), status = find('status');
   if (!audio?.play || !select?.options.length || !controls || !toggle || !position || !time || !status) return;
   const panel = find('panel'), expand = find('expand'), current = find('current');
-  let wanted = false, revision = 0;
+  const disclosure = find('disclosure'), launcher = find('launcher'), body = find('body');
+  if (!disclosure || !launcher || !body) return;
+  let wanted = false, revision = 0, place = () => {};
+  function launcherState() {
+    const label = `${disclosure.open ? 'Masquer' : 'Afficher'} le lecteur de musique${wanted ? ' (lecture en cours)' : ''}`;
+    launcher.setAttribute('aria-expanded', String(disclosure.open));
+    launcher.setAttribute('aria-label', label);
+    launcher.title = label;
+    root.setAttribute('data-playing', String(wanted));
+  }
+  disclosure.addEventListener('toggle', () => {
+    if (!disclosure.open) unfold(false);
+    launcherState();
+    place();
+  });
   function unfold(open) {
     if (!panel || !expand) return;
     panel.hidden = !open;
@@ -14,8 +28,17 @@ export function initMusicPlayer(root) {
     expand.setAttribute('aria-label', open ? 'Réduire le lecteur' : 'Afficher les morceaux et les crédits');
   }
   expand?.addEventListener('click', () => unfold(panel.hidden));
-  for (const area of [panel, expand, toggle]) area?.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { event.preventDefault(); unfold(false); expand?.focus(); }
+  for (const area of [panel, expand, toggle, launcher]) area?.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !disclosure.open) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (panel && !panel.hidden) { unfold(false); expand?.focus(); }
+    else {
+      disclosure.open = false;
+      launcherState();
+      launcher.focus();
+      place();
+    }
   });
   const title = () => select.selectedOptions[0].dataset.title;
   const clock = seconds => {
@@ -28,6 +51,7 @@ export function initMusicPlayer(root) {
     toggle.setAttribute('aria-label', `${wanted ? 'Mettre en pause' : 'Lire'} : ${title()}`);
     if (current) { current.textContent = title(); current.title = title(); }
     if (find('kind')) find('kind').textContent = select.selectedOptions[0].dataset.demo === 'true' ? 'Démo · ' : '';
+    launcherState();
   }
   function progress() {
     const duration = audio.duration;
@@ -128,15 +152,16 @@ export function initMusicPlayer(root) {
     root.ownerDocument.body.classList.add('has-music-player');
     if (typeof ResizeObserver !== 'undefined') {
       const doc = root.ownerDocument;
-      const place = () => {
-        const height = controls.getBoundingClientRect().height + status.getBoundingClientRect().height + 42;
-        doc.documentElement.style.setProperty('--music-space', `${Math.ceil(height)}px`);
+      place = () => {
+        const height = launcher.getBoundingClientRect().height;
+        doc.documentElement.style.setProperty('--music-space', `${Math.ceil(height + 24)}px`);
         const footer = doc.querySelector('.site-footer').getBoundingClientRect();
-        const bottom = Math.max(12, Math.min(innerHeight - footer.top + 12, innerHeight - root.offsetHeight - 12));
+        const occupied = height + (disclosure.open ? body.getBoundingClientRect().height + 10 : 0);
+        const bottom = Math.max(12, Math.min(innerHeight - footer.top + 12, innerHeight - occupied - 12));
         root.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
       };
       const observer = new ResizeObserver(place);
-      observer.observe(root); observer.observe(doc.body);
+      observer.observe(root); observer.observe(body); observer.observe(doc.body);
       doc.defaultView.addEventListener('scroll', place, { passive: true });
       doc.defaultView.addEventListener('resize', place);
       doc.addEventListener('site:navigated', place);

@@ -1,46 +1,58 @@
 {% if musique.tracks.length %}
 <section class="music-player" data-music-player aria-labelledby="music-heading">
   <h2 id="music-heading" class="sr-only">Lecteur de musique</h2>
-  <div class="music-main" data-music-controls hidden>
-    <button class="music-toggle" type="button" data-music-toggle>
-      <span data-music-icon aria-hidden="true">▶</span><span data-music-action class="sr-only">Lire</span>
-    </button>
-    <div class="music-label">
-      <p class="music-current" data-music-current>{{ musique.tracks[0].title }}</p>
-      <span class="music-kind" data-music-kind>{% if musique.tracks[0].demo %}Démo · {% endif %}</span><output data-music-time for="music-position" aria-live="off">0:00</output>
+  <details class="music-disclosure" data-music-disclosure>
+    <summary class="music-launcher" data-music-launcher aria-controls="music-body" title="Lecteur de musique">
+      <svg class="music-disc" viewBox="0 0 32 32" width="34" height="34" aria-hidden="true" focusable="false">
+        <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M16 6a10 10 0 0 1 10 10M6 16a10 10 0 0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="sr-only">Lecteur de musique</span>
+    </summary>
+    <div class="music-body" id="music-body" data-music-body>
+      <div class="music-main" data-music-controls hidden>
+        <button class="music-toggle" type="button" data-music-toggle>
+          <span data-music-icon aria-hidden="true">▶</span><span data-music-action class="sr-only">Lire</span>
+        </button>
+        <div class="music-label">
+          <p class="music-current" data-music-current>{{ musique.tracks[0].title }}</p>
+          <span class="music-kind" data-music-kind>{% if musique.tracks[0].demo %}Démo · {% endif %}</span><output data-music-time for="music-position" aria-live="off">0:00</output>
+        </div>
+        <button class="music-expand" type="button" data-music-expand aria-expanded="false" aria-controls="music-panel" aria-label="Afficher les morceaux et les crédits"><span aria-hidden="true">☰</span></button>
+      </div>
+      <p data-music-native-title class="music-native-title">{{ musique.tracks[0].title }}</p>
+      <audio controls preload="none" src="{{ musique.tracks[0].src }}" aria-label="Écouter {{ musique.tracks[0].title }}">
+        <a href="{{ musique.tracks[0].src }}">Écouter le premier fichier audio</a>
+      </audio>
+      <div class="music-panel" id="music-panel" data-music-panel>
+        <div data-music-choices hidden>
+          <label class="sr-only" for="music-track">Choisir un morceau</label>
+          <select id="music-track" data-music-track>
+            {% for track in musique.tracks %}<option value="{{ track.src }}" data-title="{{ track.title }}" data-demo="{{ track.demo }}">{{ track.title }}{% if track.demo %} (démo){% endif %}</option>{% endfor %}
+          </select>
+          <label class="sr-only" for="music-position">Position dans le morceau</label>
+          <input id="music-position" data-music-position type="range" min="0" max="100" step="0.1" value="0" aria-valuetext="Durée inconnue" disabled>
+        </div>
+        {% if musique.hasDemos %}<p class="music-note">Extraits provisoires : pas des enregistrements de Loz’Banda.</p>{% endif %}
+        <details class="music-credits">
+          <summary>Morceaux &amp; crédits</summary>
+          <ol>
+            {% for track in musique.tracks %}
+            <li>
+              <strong>{{ track.title }}</strong>{% if track.demo %} (démo générique){% endif %}
+              {% if track.author %}<span> : {{ track.author }}</span>{% endif %}.
+              {% if track.source %}<a href="{{ track.source }}" target="_blank" rel="noopener noreferrer">Source</a>.{% endif %}
+              {% if track.license %}<a href="{{ track.license.url }}" target="_blank" rel="noopener noreferrer">{{ track.license.name }}</a>.{% endif %}
+              {% if track.changes %}<p>{{ track.changes }}</p>{% endif %}
+              <a href="{{ track.src }}">Écouter le fichier : {{ track.title }}</a>
+            </li>
+            {% endfor %}
+          </ol>
+        </details>
+      </div>
+      <p class="music-status" data-music-status role="status" aria-live="polite" aria-atomic="true"></p>
     </div>
-    <button class="music-expand" type="button" data-music-expand aria-expanded="false" aria-controls="music-panel" aria-label="Afficher les morceaux et les crédits"><span aria-hidden="true">☰</span></button>
-  </div>
-  <p data-music-native-title class="music-native-title">{{ musique.tracks[0].title }}</p>
-  <audio controls preload="none" src="{{ musique.tracks[0].src }}" aria-label="Écouter {{ musique.tracks[0].title }}">
-    <a href="{{ musique.tracks[0].src }}">Écouter le premier fichier audio</a>
-  </audio>
-  <div class="music-panel" id="music-panel" data-music-panel>
-    <div data-music-choices hidden>
-      <label class="sr-only" for="music-track">Choisir un morceau</label>
-      <select id="music-track" data-music-track>
-        {% for track in musique.tracks %}<option value="{{ track.src }}" data-title="{{ track.title }}" data-demo="{{ track.demo }}">{{ track.title }}{% if track.demo %} (démo){% endif %}</option>{% endfor %}
-      </select>
-      <label class="sr-only" for="music-position">Position dans le morceau</label>
-      <input id="music-position" data-music-position type="range" min="0" max="100" step="0.1" value="0" aria-valuetext="Durée inconnue" disabled>
-    </div>
-    {% if musique.hasDemos %}<p class="music-note">Extraits provisoires : pas des enregistrements de Loz’Banda.</p>{% endif %}
-    <details class="music-credits">
-      <summary>Morceaux &amp; crédits</summary>
-      <ol>
-        {% for track in musique.tracks %}
-        <li>
-          <strong>{{ track.title }}</strong>{% if track.demo %} (démo générique){% endif %}
-          {% if track.author %}<span> : {{ track.author }}</span>{% endif %}.
-          {% if track.source %}<a href="{{ track.source }}" target="_blank" rel="noopener noreferrer">Source</a>.{% endif %}
-          {% if track.license %}<a href="{{ track.license.url }}" target="_blank" rel="noopener noreferrer">{{ track.license.name }}</a>.{% endif %}
-          {% if track.changes %}<p>{{ track.changes }}</p>{% endif %}
-          <a href="{{ track.src }}">Écouter le fichier : {{ track.title }}</a>
-        </li>
-        {% endfor %}
-      </ol>
-    </details>
-  </div>
-  <p class="music-status" data-music-status role="status" aria-live="polite" aria-atomic="true"></p>
+  </details>
 </section>
 {% endif %}

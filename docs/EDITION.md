@@ -80,8 +80,12 @@ Les fichiers non déclarés ne sont pas copiés dans l’artefact.
 
 Conserver les crédits et l’empreinte de l’enregistrement actuel, « La Lozère bat des ailes ».
 Une nouvelle piste exige sa propre autorisation ; l’accord existant ne la couvre pas.
-La musique démarre au clic, sans avance automatique, et continue entre les pages
-internes. Une recharge complète, une fermeture ou le départ du site l’arrête.
+Le lecteur est masqué au départ : le bouton CD l’affiche, sans démarrer la musique.
+Seul **Lire** lance le morceau, sans avance automatique. Le CD peut masquer à nouveau
+le lecteur sans interrompre la musique, qui continue entre les pages internes.
+Échap referme d’abord les crédits ouverts, puis le lecteur en rendant le focus au CD.
+Sans JavaScript, le même bouton donne accès au lecteur natif et aux crédits.
+Une recharge complète, une fermeture de l’onglet ou le départ du site arrête la musique.
 
 ## Vérifier puis mettre en ligne
 
