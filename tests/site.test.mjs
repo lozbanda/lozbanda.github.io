@@ -45,6 +45,16 @@ test('cinq vraies pages avec titres distincts, structure et ancres accessibles',
   assert.equal(descriptions.size, 5);
 });
 
+test('les intitulés du menu, des pages et du partage restent cohérents sans changer les URL', () => {
+  for (const [href, label] of navigation) {
+    const page = pages[href];
+    const heading = decode(page.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)[1].replace(/<[^>]+>/g, '').trim());
+    assert.equal(heading, label, href);
+    assert.equal(decode(page.match(/<title>([^<]+)<\/title>/)[1]), `${label} | ${siteConfig.nom}`, href);
+    assert.equal(decode(page.match(/property="og:title" content="([^"]+)"/)[1]), `${label} | ${siteConfig.nom}`, href);
+  }
+});
+
 test('sortie éditoriale et code du site sans symboles décoratifs supprimés', () => {
   function checkDirectory(directory) {
     for (const name of readdirSync(directory)) {

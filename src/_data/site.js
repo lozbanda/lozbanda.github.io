@@ -6,9 +6,9 @@ export default {
   // À changer seulement après validation des droits et autorisation de publication.
   robots: 'noindex, nofollow',
   navigation: [
-    { id: 'agenda', href: 'agenda.html', label: 'Agenda' },
-    { id: 'galerie', href: 'galerie.html', label: 'Galerie photo' },
-    { id: 'musiciens', href: 'musiciens.html', label: 'Les Musiciens' },
+    { id: 'agenda', href: 'agenda.html', label: 'Nos sorties' },
+    { id: 'galerie', href: 'galerie.html', label: 'Galerie photos' },
+    { id: 'musiciens', href: 'musiciens.html', label: 'Nos musiciens' },
     { id: 'infos-pratiques', href: 'infos-pratiques.html', label: 'Infos pratiques' },
   ],
 };
