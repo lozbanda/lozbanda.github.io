@@ -13,16 +13,6 @@ export function ordinaryClick(event, link) {
     && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey
     && !link.hasAttribute('download') && (!link.target || link.target === '_self');
 }
-// Garder la barre et le lecteur connectés : déplacer un <audio> peut le mettre en pause.
-export function updateHeader(current, incoming) {
-  const menu = current?.querySelector('.site-nav'), next = incoming?.querySelector('.site-nav');
-  if (!menu || !next) throw new Error('Navigation absente');
-  current.className = incoming.className;
-  current.querySelector('.brand')?.remove();
-  const brand = incoming.querySelector('.brand');
-  if (brand) current.prepend(brand);
-  menu.replaceWith(next);
-}
 if (typeof document !== 'undefined') initNavigation();
 
 function initNavigation() {
@@ -82,7 +72,7 @@ function initNavigation() {
           || sitePage(response.url, base) !== page) throw new Error('Page indisponible');
       const incoming = new DOMParser().parseFromString(await response.text(), 'text/html');
       const main = incoming.querySelector('main#contenu'), header = incoming.querySelector('.site-header');
-      if (!main || !header?.querySelector('.site-nav') || incoming.body.dataset.page !== page) throw new Error('Page invalide');
+      if (!main || !header || incoming.body.dataset.page !== page) throw new Error('Page invalide');
       // Aucun script provenant du HTML récupéré n’est exécuté.
       for (const script of incoming.querySelectorAll('script')) script.remove();
       const activate = await prepare(page);
@@ -94,7 +84,7 @@ function initNavigation() {
       }
       const previous = document.querySelector('main');
       previous.disposePage?.();
-      updateHeader(document.querySelector('.site-header'), header);
+      document.querySelector('.site-header').replaceWith(header);
       previous.replaceWith(main);
       document.body.dataset.page = page;
       document.title = incoming.title;

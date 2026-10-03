@@ -149,18 +149,22 @@ export function initMusicPlayer(root) {
     find('choices').hidden = false;
     unfold(false);
     root.setAttribute('data-enhanced', '');
+    root.ownerDocument.body.classList.add('has-music-player');
     if (typeof ResizeObserver !== 'undefined') {
-      const doc = root.ownerDocument, bar = root.closest('.header-menu');
+      const doc = root.ownerDocument;
       place = () => {
-        const available = doc.defaultView.innerHeight - bar.getBoundingClientRect().bottom - 22;
-        body.style.setProperty('--music-height', `${Math.max(80, Math.floor(available))}px`);
+        const height = launcher.getBoundingClientRect().height;
+        doc.documentElement.style.setProperty('--music-space', `${Math.ceil(height + 24)}px`);
+        const footer = doc.querySelector('.site-footer').getBoundingClientRect();
+        const occupied = height + (disclosure.open ? body.getBoundingClientRect().height + 10 : 0);
+        const bottom = Math.max(12, Math.min(innerHeight - footer.top + 12, innerHeight - occupied - 12));
+        root.style.bottom = `calc(${bottom}px + env(safe-area-inset-bottom))`;
       };
       const observer = new ResizeObserver(place);
-      observer.observe(bar);
+      observer.observe(root); observer.observe(body); observer.observe(doc.body);
       doc.defaultView.addEventListener('scroll', place, { passive: true });
       doc.defaultView.addEventListener('resize', place);
       doc.addEventListener('site:navigated', place);
-      place();
     }
   }
 }
