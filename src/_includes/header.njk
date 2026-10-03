@@ -4,6 +4,7 @@
     <img class="brand-logo" src="assets/logo.webp" width="300" height="240" alt="Logo de Loz’Banda">
   </a>
   {% endif %}
+  <div class="header-menu">
   <nav class="site-nav" aria-label="Navigation principale">
     <ul>
       {% for item in site.navigation %}
@@ -11,4 +12,6 @@
       {% endfor %}
     </ul>
   </nav>
+  {% include "music-player.njk" %}
+  </div>
 </header>

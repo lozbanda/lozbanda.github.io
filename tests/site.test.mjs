@@ -128,12 +128,24 @@ test('playlist publiée issue du Markdown : vrai lecteur de fichiers locaux, auc
     assert.match(page, /<details class="music-disclosure" data-music-disclosure>/);
     assert.match(page, /<summary[^>]+data-music-launcher[^>]+aria-controls="music-body"/);
     assert.equal((page.match(/id="music-body"/g) || []).length, 1);
+    const header = page.match(/<header\b[\s\S]*?<\/header>/)[0];
+    assert.match(header, /class="header-menu"/);
+    assert.ok(header.indexOf('data-music-player') > header.indexOf('</nav>'), 'CD après les liens du menu');
+    assert.equal((page.match(/data-music-player/g) || []).length, 1, 'Un seul lecteur, dans la barre');
+    assert.match(header, /<audio controls preload="none"/);
   }
   for (const item of music.tracks) assert.ok(html.includes(`value="${escape(item.src)}"`));
   assert.doesNotMatch(html, /music-links|youtube-nocookie|<iframe/);
   const directory = join(root, 'assets/audio');
   const published = existsSync(directory) ? readdirSync(directory).sort() : [];
   assert.deepEqual(published, music.tracks.map(track => track.file).sort(), 'Aucun ancien fichier audio dans le site compilé');
+});
+
+test('le CD appartient au menu, sans position fixe ni réserve en bas de page', () => {
+  const player = readFileSync(join(root, 'music-player.css'), 'utf8');
+  assert.doesNotMatch(player, /position: fixed|music-space|has-music-player/);
+  assert.match(player, /\.music-body \{[^}]*top: calc\(100% \+ 10px\)/);
+  assert.match(css, /\.header-menu \{[^}]*position: relative;[^}]*align-items: center;/);
 });
 
 test('pages secondaires compactes : titre accessible invisible, archives avant le calendrier', () => {
